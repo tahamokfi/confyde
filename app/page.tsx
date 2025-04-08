@@ -34,198 +34,277 @@ export default function Home() {
   }
   
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-[#0c323d] text-white flex flex-col">
-        <div className="p-4 border-b border-[#1a4652]">
-          <div className="text-2xl font-bold">Confyde</div>
-        </div>
-        
-        <nav className="flex-1 p-4">
-          <div className="space-y-1">
-            <Link href="/dashboard" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5 mr-3 text-gray-300" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={8} 
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
-                />
-              </svg>
-              Dashboard
-            </Link>
-            
-            <Link href="/scenarios" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5 mr-3 text-gray-300" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" 
-                />
-              </svg>
-              Scenarios
-            </Link>
-            
-            <Link href="/portfolio-projects" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5 mr-3 text-gray-300" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" 
-                />
-              </svg>
-              Portfolio & Projects
-            </Link>
-            
-            <Link href="/study-documents" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5 mr-3 text-gray-300" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
-                />
-              </svg>
-              Study Documents
-            </Link>
-          </div>
-          
-          <div className="mt-8 pt-4 border-t border-[#1a4652]">
-            <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Admin
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex-shrink-0 flex items-center">
+              <span className="text-2xl font-bold text-[#0c323d]">Confyde</span>
             </div>
-            
-            <div className="mt-2 space-y-1">
-              <Link href="/organization" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-5 w-5 mr-3 text-gray-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" 
-                  />
-                </svg>
-                Organization
-              </Link>
-              
-              <Link href="/settings" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-5 w-5 mr-3 text-gray-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
-                  />
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
-                  />
-                </svg>
-                Settings
-              </Link>
-              
-              <Link href="/help" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-[#1a4652] group">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-5 w-5 mr-3 text-gray-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
-                  />
-                </svg>
-                Help
-              </Link>
-            </div>
-          </div>
-        </nav>
-        
-        <div className="p-4 border-t border-[#1a4652]">
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-gray-300"></div>
-            <div className="ml-3">
-              <p className="text-sm font-medium">User Name</p>
-              <button 
-                onClick={async () => {
-                  await supabase.auth.signOut();
-                  router.push('/auth/login');
-                }}
-                className="text-xs text-gray-400 hover:text-white"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Main content */}
-      <div className="ml-64 w-full">
-        <main className="flex items-center justify-center min-h-screen p-6">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome to Confyde</h1>
-            <div className="flex space-x-4 justify-center">
-              <Link
+            <div className="flex space-x-4">
+              <Link 
                 href="/auth/login"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-[#0c323d] hover:text-blue-800"
               >
-                Sign in
+                Log in
               </Link>
               <Link
-                href="/auth/register"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                href="/auth/signup"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#0c323d] hover:bg-[#1c4653]"
               >
-                Register
+                Sign up
               </Link>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </header>
+      
+      {/* Hero section */}
+      <main>
+        <div className="relative">
+          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className="relative shadow-xl sm:rounded-2xl sm:overflow-hidden">
+              <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c323d] to-[#1c4653] mix-blend-multiply"></div>
+              </div>
+              <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+                <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                  <span className="block text-white">Transforming Clinical Trial Design</span>
+                  <span className="block text-blue-200 mt-2">with Purpose-Built Technology</span>
+                </h1>
+                <p className="mt-6 max-w-lg mx-auto text-center text-xl text-white sm:max-w-3xl">
+                  Streamline cross-functional clinical trial design with unified data sources, 
+                  reducing risk and saving time and money on your 9-figure investment decisions.
+                </p>
+                <div className="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
+                  <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
+                    <Link
+                      href="/auth/signup"
+                      className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-[#0c323d] bg-white hover:bg-gray-100 sm:px-8"
+                    >
+                      Get started
+                    </Link>
+                    <a
+                      href="#features"
+                      className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8"
+                    >
+                      Learn more
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Features section */}
+        <div id="features" className="py-16 bg-gray-50 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-base font-semibold text-blue-600 tracking-wide uppercase">Efficient Solutions</h2>
+              <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight">
+                Replace Repetitive Manual Work
+              </p>
+              <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
+                Our platform eliminates inefficiencies in clinical trial design with cutting-edge technology.
+              </p>
+            </div>
+
+            <div className="mt-16">
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {/* Feature 1 */}
+                <div className="pt-6">
+                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-md">
+                    <div className="-mt-6">
+                      <div>
+                        <span className="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg">
+                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2.5 2.0 01-2-2z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">Unified Data Sources</h3>
+                      <p className="mt-5 text-base text-gray-500">
+                        Access all your clinical trial data in one central location, eliminating silos and reducing errors.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature 2 */}
+                <div className="pt-6">
+                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-md">
+                    <div className="-mt-6">
+                      <div>
+                        <span className="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg">
+                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">Time & Cost Savings</h3>
+                      <p className="mt-5 text-base text-gray-500">
+                        Reduce your investment risk with automated workflows that save time and minimize human error.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature 3 */}
+                <div className="pt-6">
+                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-md">
+                    <div className="-mt-6">
+                      <div>
+                        <span className="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg">
+                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">Reduce Investment Risk</h3>
+                      <p className="mt-5 text-base text-gray-500">
+                        Make informed 9-figure investment decisions with comprehensive data analysis and risk assessment tools.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA section */}
+        <div className="bg-white">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+            <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              <span className="block">Ready to transform your clinical trial design?</span>
+              <span className="block text-blue-600">Start using Confyde today.</span>
+            </h2>
+            <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+              <div className="inline-flex rounded-md shadow">
+                <Link
+                  href="/auth/signup"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#0c323d] hover:bg-[#1c4653]"
+                >
+                  Get started
+                </Link>
+              </div>
+              <div className="ml-3 inline-flex rounded-md shadow">
+                <Link
+                  href="/auth/login"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-[#0c323d] bg-white hover:bg-gray-50"
+                >
+                  Log in
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+          <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+            <div className="space-y-8 xl:col-span-1">
+              <div className="text-white text-2xl font-bold">Confyde</div>
+              <p className="text-gray-300 text-base">
+                Making clinical trial design efficient, data-driven, and cost-effective.
+              </p>
+              <div className="flex space-x-6">
+                {/* Social links would go here */}
+              </div>
+            </div>
+            <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+              <div className="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Solutions</h3>
+                  <ul className="mt-4 space-y-4">
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Portfolio Management
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Protocol Design
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Scenario Planning
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="mt-12 md:mt-0">
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Support</h3>
+                  <ul className="mt-4 space-y-4">
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Documentation
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Guides
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Contact Us
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Company</h3>
+                  <ul className="mt-4 space-y-4">
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        About
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Careers
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Blog
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="mt-12 md:mt-0">
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Legal</h3>
+                  <ul className="mt-4 space-y-4">
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Privacy
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-base text-gray-300 hover:text-white">
+                        Terms
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-12 border-t border-gray-700 pt-8">
+            <p className="text-base text-gray-400 xl:text-center">
+              &copy; 2023 Confyde. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 } 

@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { Metadata } from 'next';
-import ClientSideLayout from '@/components/layout/ClientSideLayout';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
 export const metadata: Metadata = {
   title: 'Confyde - Drug Discovery Research',
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-50">
-        <ClientSideLayout>
+        <LayoutWrapper>
           {children}
-        </ClientSideLayout>
+        </LayoutWrapper>
       </body>
     </html>
   );
