@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtocolForm from '@/components/forms/ProtocolForm';
 import ScenarioForm from '@/components/forms/ScenarioForm';
 import { supabase } from '@/lib/supabaseClient';
 import { ChevronUpIcon, ChevronDownIcon, MagnifyingGlassIcon, DocumentTextIcon, ArrowPathIcon, UserGroupIcon, UserIcon, BeakerIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 
-export default function ProtocolPage() {
+// Create a client component that uses useSearchParams
+function ProtocolPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const scenarioId = searchParams.get('id');
@@ -673,5 +674,18 @@ export default function ProtocolPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Main page component wrapped with Suspense
+export default function ProtocolPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    }>
+      <ProtocolPageContent />
+    </Suspense>
   );
 } 

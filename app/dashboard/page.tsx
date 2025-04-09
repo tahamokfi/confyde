@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { handleStringChange } from '@/lib/formUtils';
@@ -19,7 +19,8 @@ interface Scenario {
   sample_size: number;
 }
 
-export default function Dashboard() {
+// DashboardContent component that uses useSearchParams
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlProjectId = searchParams.get('project');
@@ -549,5 +550,18 @@ export default function Dashboard() {
         </div>
       )}
     </div>
+  );
+}
+
+// Main page component wrapped with Suspense
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 } 
