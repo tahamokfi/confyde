@@ -1,5 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 export default function StudyDocuments() {
   return (
     <div className="flex flex-col h-full">
