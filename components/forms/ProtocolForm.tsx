@@ -1,14 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
 interface ProtocolFormProps {
   scenario: any;
   onSuccess: () => void;
+  importedData?: {
+    inclusionCriteria?: string;
+    exclusionCriteria?: string;
+    sampleSize?: number | null;
+    investigationalArm?: string;
+    controlArm?: string;
+    primaryEndPoint?: string;
+    secondaryEndPoint?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+  } | null;
 }
 
-export default function ProtocolForm({ scenario, onSuccess }: ProtocolFormProps) {
+export default function ProtocolForm({ scenario, onSuccess, importedData }: ProtocolFormProps) {
   const [inclusionCriteria, setInclusionCriteria] = useState(scenario?.inclusion_criteria || '');
   const [sampleSize, setSampleSize] = useState(scenario?.sample_size?.toString() || '0');
   const [investigationalArm, setInvestigationalArm] = useState(scenario?.investigational_arm || '');
@@ -16,9 +28,53 @@ export default function ProtocolForm({ scenario, onSuccess }: ProtocolFormProps)
   const [primaryEndPoint, setPrimaryEndPoint] = useState(scenario?.primary_end_point || '');
   const [secondaryEndPoint, setSecondaryEndPoint] = useState(scenario?.secondary_end_point || '');
   const [exploratoryEndPoint, setExploratoryEndPoint] = useState(scenario?.exploratory_end_point || '');
+  const [status, setStatus] = useState(scenario?.status || '');
+  const [startDate, setStartDate] = useState(scenario?.start_date || '');
+  const [endDate, setEndDate] = useState(scenario?.end_date || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  
+  // Update form fields when imported data changes
+  useEffect(() => {
+    if (importedData) {
+      if (importedData.inclusionCriteria !== undefined) {
+        setInclusionCriteria(importedData.inclusionCriteria);
+      }
+      
+      if (importedData.sampleSize !== undefined && importedData.sampleSize !== null) {
+        setSampleSize(importedData.sampleSize.toString());
+      }
+      
+      if (importedData.investigationalArm !== undefined) {
+        setInvestigationalArm(importedData.investigationalArm);
+      }
+      
+      if (importedData.controlArm !== undefined) {
+        setControlArm(importedData.controlArm);
+      }
+      
+      if (importedData.primaryEndPoint !== undefined) {
+        setPrimaryEndPoint(importedData.primaryEndPoint);
+      }
+      
+      if (importedData.secondaryEndPoint !== undefined) {
+        setSecondaryEndPoint(importedData.secondaryEndPoint);
+      }
+      
+      if (importedData.status !== undefined) {
+        setStatus(importedData.status);
+      }
+      
+      if (importedData.startDate !== undefined) {
+        setStartDate(importedData.startDate);
+      }
+      
+      if (importedData.endDate !== undefined) {
+        setEndDate(importedData.endDate);
+      }
+    }
+  }, [importedData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +92,10 @@ export default function ProtocolForm({ scenario, onSuccess }: ProtocolFormProps)
           control_arm: controlArm,
           primary_end_point: primaryEndPoint,
           secondary_end_point: secondaryEndPoint,
-          exploratory_end_point: exploratoryEndPoint
+          exploratory_end_point: exploratoryEndPoint,
+          status: status,
+          start_date: startDate,
+          end_date: endDate
         })
         .eq('id', scenario.id);
 
@@ -157,6 +216,45 @@ export default function ProtocolForm({ scenario, onSuccess }: ProtocolFormProps)
             onChange={(e) => setExploratoryEndPoint(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+            Status
+          </label>
+          <input
+            id="status"
+            type="text"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+            Start Date
+          </label>
+          <input
+            id="startDate"
+            type="text"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
+            End Date
+          </label>
+          <input
+            id="endDate"
+            type="text"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { handleStringChange } from '@/lib/formUtils';
+import { signInWithEmail } from '@/lib/authUtils';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginForm() {
@@ -18,47 +20,57 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Use our auth utility function for sign in
+      const { user, session, error: signInError } = await signInWithEmail(email, password);
 
-      if (error) {
-        throw error;
+      if (signInError || !user) {
+        setError(signInError || 'Failed to login');
+        setLoading(false);
+        return;
       }
 
-      if (data.user) {
-        // Check if user belongs to the selected company
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('company_id')
-          .eq('user_id', data.user.id)
-          .single();
+      console.log("Signed in successfully:", user.id);
 
-        if (userError) {
-          throw userError;
-        }
+      // Get user's company details directly from Supabase
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('company_id')
+        .eq('user_id', user.id)
+        .single();
 
-        // Fetch the company details
-        const { data: companyData, error: companyError } = await supabase
-          .from('companies')
-          .select('name')
-          .eq('id', userData.company_id)
-          .single();
+      if (userError) {
+        throw new Error(userError.message);
+      }
 
-        if (companyError) {
-          throw companyError;
-        }
+      // Get company name
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
+        .select('name')
+        .eq('id', userData.company_id)
+        .single();
+        
+      if (companyError) {
+        throw new Error(companyError.message);
+      }
 
-        if (companyData.name === company) {
-          router.push('/dashboard');
-        } else {
-          setError('You do not have access to the selected company');
-          await supabase.auth.signOut();
-        }
+      // Verify company match
+      if (companyData.name === company) {
+        router.push('/dashboard');
+      } else {
+        setError('You do not have access to the selected company');
+        // Sign out user if company doesn't match
+        await supabase.auth.signOut();
       }
     } catch (error: any) {
+      console.error("Login error:", error);
       setError(error.message || 'An error occurred during login');
+      
+      // Sign out if there was an error
+      try {
+        await supabase.auth.signOut();
+      } catch (signOutError) {
+        console.error("Error signing out:", signOutError);
+      }
     } finally {
       setLoading(false);
     }
@@ -83,7 +95,7 @@ export default function LoginForm() {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleStringChange(e, setEmail)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -97,7 +109,7 @@ export default function LoginForm() {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handleStringChange(e, setPassword)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -110,7 +122,7 @@ export default function LoginForm() {
           <select
             id="company"
             value={company}
-            onChange={(e) => setCompany(e.target.value)}
+            onChange={(e) => handleStringChange(e, setCompany)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >

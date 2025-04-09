@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { handleStringChange } from '@/lib/formUtils';
+import { createProject } from '@/lib/dataUtils';
+import { Project } from '@/lib/types';
 
 interface ProjectFormProps {
-  onSuccess: (newProject: any) => void;
+  onSuccess: (newProject: Project) => void;
   onCancel: () => void;
   companyId: string;
   userId: string;
@@ -28,31 +30,22 @@ export default function ProjectForm({ onSuccess, onCancel, companyId, userId }: 
       return;
     }
 
-    try {
-      const { data, error } = await supabase
-        .from('projects')
-        .insert([
-          { 
-            name, 
-            description, 
-            start_date: startDate,
-            company_id: companyId,
-            created_by: userId
-          }
-        ])
-        .select()
-        .single();
+    const { data, error: createError } = await createProject({ 
+      name, 
+      description, 
+      start_date: startDate,
+      company_id: companyId,
+      created_by: userId
+    });
 
-      if (error) {
-        throw error;
-      }
-
-      onSuccess(data);
-    } catch (error: any) {
-      setError(error.message || 'An error occurred while creating the project');
-    } finally {
+    if (createError) {
+      setError(createError);
       setLoading(false);
+      return;
     }
+
+    onSuccess(data);
+    setLoading(false);
   };
 
   return (
@@ -74,7 +67,7 @@ export default function ProjectForm({ onSuccess, onCancel, companyId, userId }: 
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => handleStringChange(e, setName)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -88,7 +81,7 @@ export default function ProjectForm({ onSuccess, onCancel, companyId, userId }: 
             id="startDate"
             type="date"
             value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            onChange={(e) => handleStringChange(e, setStartDate)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -101,7 +94,7 @@ export default function ProjectForm({ onSuccess, onCancel, companyId, userId }: 
           <textarea
             id="description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => handleStringChange(e, setDescription)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
           />

@@ -30,92 +30,77 @@ export default function ScenariosLayout({
   const scenarioId = searchParams.get('id');
   const projectId = searchParams.get('project');
   
-  const [projects, setProjects] = useState<Project[]>([]);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
-  const [isScenarioDropdownOpen, setIsScenarioDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Check authentication and get projects
+  // Check authentication and get project data
   useEffect(() => {
-    const getUserData = async () => {
+    const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         window.location.href = '/auth/login';
         return;
       }
-
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('company_id')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (userError) {
-        setError('Error fetching user data');
-        return;
+      
+      if (projectId) {
+        fetchProjectDetails(projectId);
+      } else if (scenarioId) {
+        fetchScenarioProject(scenarioId);
+      } else {
+        setIsLoading(false);
       }
-
-      fetchProjects();
     };
 
-    getUserData();
-  }, [projectId]);
+    checkAuth();
+  }, [projectId, scenarioId]);
   
-  // Fetch projects for the user's company
-  const fetchProjects = async () => {
+  // Fetch project details when projectId changes
+  const fetchProjectDetails = async (projectId: string) => {
     try {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
-        .order('name', { ascending: true });
+        .eq('id', projectId)
+        .single();
 
       if (error) throw error;
 
-      setProjects(data || []);
-      
-      if (projectId && data) {
-        const project = data.find(p => p.id === projectId);
-        if (project) {
-          setSelectedProject(project);
-          fetchScenarios(project.id);
-        } else if (data.length > 0) {
-          setSelectedProject(data[0]);
-          fetchScenarios(data[0].id);
-        }
-      } else if (scenarioId && data) {
-        // If we have a scenario ID but no project ID, fetch the scenario to get its project
-        const { data: scenarioData, error: scenarioError } = await supabase
-          .from('scenarios')
-          .select('project_id, name, id, created_at')
-          .eq('id', scenarioId)
-          .single();
-          
-        if (!scenarioError && scenarioData) {
-          const project = data.find(p => p.id === scenarioData.project_id);
-          if (project) {
-            setSelectedProject(project);
-            fetchScenarios(project.id);
-            setSelectedScenario({
-              id: scenarioData.id,
-              name: scenarioData.name,
-              project_id: scenarioData.project_id,
-              created_at: scenarioData.created_at
-            });
-          } else if (data.length > 0) {
-            setSelectedProject(data[0]);
-            fetchScenarios(data[0].id);
-          }
-        }
-      } else if (data && data.length > 0) {
-        setSelectedProject(data[0]);
-        fetchScenarios(data[0].id);
+      if (data) {
+        setSelectedProject(data);
+        fetchScenarios(data.id);
       }
     } catch (error: any) {
-      setError(error.message || 'Error fetching projects');
-    } finally {
+      setError(error.message || 'Error fetching project details');
+      setIsLoading(false);
+    }
+  };
+  
+  // Fetch project details from scenario
+  const fetchScenarioProject = async (scenarioId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('scenarios')
+        .select('project_id, name, id, created_at')
+        .eq('id', scenarioId)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data) {
+        setSelectedScenario({
+          id: data.id,
+          name: data.name,
+          project_id: data.project_id,
+          created_at: data.created_at
+        });
+        
+        fetchProjectDetails(data.project_id);
+      }
+    } catch (error: any) {
+      setError(error.message || 'Error fetching scenario details');
       setIsLoading(false);
     }
   };
@@ -150,24 +135,12 @@ export default function ScenariosLayout({
       } else {
         setSelectedScenario(null);
       }
+      
+      setIsLoading(false);
     } catch (error: any) {
       console.error('Error fetching scenarios:', error);
+      setIsLoading(false);
     }
-  };
-
-  const handleProjectSelect = (project: Project) => {
-    setSelectedProject(project);
-    // Force a full page reload by using window.location.href
-    window.location.href = `/scenarios?project=${project.id}`;
-  };
-
-  const handleScenarioSelect = (scenario: Scenario) => {
-    setSelectedScenario(scenario);
-    setIsScenarioDropdownOpen(false);
-    
-    // Get current path and update the URL with the selected scenario
-    const basePath = pathname.split('?')[0];
-    router.push(`${basePath}?id=${scenario.id}`);
   };
 
   const getTabClassName = (isActive: boolean) => {
@@ -179,8 +152,9 @@ export default function ScenariosLayout({
   };
 
   // Determine active tab based on pathname
-  const isProtocolActive = !pathname.includes('/schema');
+  const isProtocolActive = pathname.includes('/protocol');
   const isSchemaActive = pathname.includes('/schema');
+  const isSampleSizeActive = pathname.includes('/sample-size');
 
   // Update selected scenario when scenario ID changes
   useEffect(() => {
@@ -202,7 +176,7 @@ export default function ScenariosLayout({
       <header className="bg-white shadow-sm py-4 px-6">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-semibold text-gray-800">
-            {selectedScenario ? selectedScenario.name : 'Scenarios'}
+            Scenario Design
           </h1>
           <div className="flex items-center space-x-3">
             <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
@@ -221,55 +195,20 @@ export default function ScenariosLayout({
         {selectedProject && (
           <div className="p-6 pb-2">
             <div className="mb-2">
-              <div className="text-sm text-gray-500">Scenario 1</div>
               <div className="flex items-center mt-1">
                 <div className="w-1 h-5 bg-teal-500 mr-2"></div>
                 <h2 className="text-xl font-bold text-gray-900">{selectedProject.name}</h2>
               </div>
-              <p className="text-gray-600 mt-1">{selectedProject.description || 'Lorem ipsum dolor sit amet consectetur. Nisi massa augue id sed lectus turpis tortor diam. Sem facilisis justo feugiat diam ullamcorper.'}</p>
+              <p className="text-gray-600 mt-1">{selectedProject.description}</p>
             </div>
 
             <div className="flex justify-between items-center mt-4 mb-1">
-              <div className="relative">
-                <button
-                  onClick={() => setIsScenarioDropdownOpen(!isScenarioDropdownOpen)}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none"
-                >
-                  {selectedScenario ? selectedScenario.name : 'Select Scenario'}
-                  <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-                
-                {isScenarioDropdownOpen && (
-                  <div className="origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                    <div className="py-1 max-h-60 overflow-y-auto">
-                      {scenarios.length > 0 ? (
-                        scenarios.map((scenario) => (
-                          <button
-                            key={scenario.id}
-                            onClick={() => handleScenarioSelect(scenario)}
-                            className={`block w-full text-left px-4 py-2 text-sm ${
-                              selectedScenario?.id === scenario.id
-                                ? 'bg-gray-100 text-gray-900'
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
-                          >
-                            {scenario.name}
-                          </button>
-                        ))
-                      ) : (
-                        <div className="px-4 py-2 text-sm text-gray-500">No scenarios available</div>
-                      )}
-                      <button
-                        onClick={() => {
-                          setIsScenarioDropdownOpen(false);
-                          router.push(`/scenarios/protocol?project=${selectedProject.id}`);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 border-t border-gray-100"
-                      >
-                        + Create New Scenario
-                      </button>
+              <div>
+                {selectedScenario && (
+                  <div className="flex items-center">
+                    <div className="w-1 h-5 bg-blue-500 mr-2"></div>
+                    <div className="text-lg font-medium text-gray-700">
+                      <span className="text-blue-500">Scenario:</span> {selectedScenario.name}
                     </div>
                   </div>
                 )}
@@ -282,9 +221,6 @@ export default function ScenariosLayout({
                   </svg>
                   Export
                 </button>
-                <div className="text-lg font-medium text-gray-700">
-                  Tasks and collaboration
-                </div>
               </div>
             </div>
           </div>
@@ -303,6 +239,12 @@ export default function ScenariosLayout({
               className={getTabClassName(isSchemaActive)}
             >
               Schema
+            </Link>
+            <Link
+              href={`/scenarios/sample-size?${scenarioId ? `id=${scenarioId}` : `project=${selectedProject?.id}`}`}
+              className={getTabClassName(isSampleSizeActive)}
+            >
+              Sample Size
             </Link>
           </nav>
         </div>

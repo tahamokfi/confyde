@@ -1,0 +1,493 @@
+{
+  "protocolSection": {
+    "identificationModule": {
+      "nctId": "NCT02503358",
+      "orgStudyIdInfo": {
+        "id": "IRB00011462"
+      },
+      "secondaryIdInfos": [
+        {
+          "id": "NCI-2015-01018",
+          "type": "REGISTRY",
+          "domain": "CTRP (Clinical Trial Reporting Program)"
+        },
+        {
+          "id": "11,462"
+        },
+        {
+          "id": "SOL-15008-L"
+        },
+        {
+          "id": "IRB00011462",
+          "type": "OTHER",
+          "domain": "OHSU Knight Cancer Institute"
+        }
+      ],
+      "organization": {
+        "fullName": "OHSU Knight Cancer Institute",
+        "class": "OTHER"
+      },
+      "briefTitle": "Selumetinib and Paclitaxel as Second-Line Treatment in Treating Patients With Stage IIIB-IV Non-small Cell Lung Cancer",
+      "officialTitle": "A Randomized, Open-Label, Phase I Trial of Continuous, Intermittent, and Pulsatile Selumetinib (AZD6244) Plus Paclitaxel as Second-Line Treatment for Stage IIIB or IV Non-small Cell Lung Cancer (NSCLC)"
+    },
+    "statusModule": {
+      "statusVerifiedDate": "2023-03",
+      "overallStatus": "COMPLETED",
+      "expandedAccessInfo": {
+        "hasExpandedAccess": false
+      },
+      "startDateStruct": {
+        "date": "2016-07-21",
+        "type": "ACTUAL"
+      },
+      "primaryCompletionDateStruct": {
+        "date": "2020-07-16",
+        "type": "ACTUAL"
+      },
+      "completionDateStruct": {
+        "date": "2020-07-16",
+        "type": "ACTUAL"
+      },
+      "studyFirstSubmitDate": "2015-07-14",
+      "studyFirstSubmitQcDate": "2015-07-17",
+      "studyFirstPostDateStruct": {
+        "date": "2015-07-21",
+        "type": "ESTIMATED"
+      },
+      "lastUpdateSubmitDate": "2023-03-18",
+      "lastUpdatePostDateStruct": {
+        "date": "2023-03-21",
+        "type": "ACTUAL"
+      }
+    },
+    "sponsorCollaboratorsModule": {
+      "responsibleParty": {
+        "type": "PRINCIPAL_INVESTIGATOR",
+        "investigatorFullName": "Brian Druker",
+        "investigatorTitle": "Principal Investigator",
+        "investigatorAffiliation": "OHSU Knight Cancer Institute"
+      },
+      "leadSponsor": {
+        "name": "OHSU Knight Cancer Institute",
+        "class": "OTHER"
+      },
+      "collaborators": [
+        {
+          "name": "Oregon Health and Science University",
+          "class": "OTHER"
+        },
+        {
+          "name": "AstraZeneca",
+          "class": "INDUSTRY"
+        }
+      ]
+    },
+    "oversightModule": {
+      "oversightHasDmc": true
+    },
+    "descriptionModule": {
+      "briefSummary": "This randomized phase I trial is studying the side effects and the best dose of selumetinib when given together with paclitaxel as a second line therapy in treating patients with stage IIIB-IV non-small cell lung cancer (NSCLC). Selumetinib may stop or slow the growth of tumor cells by blocking a protein called mitogen-activated protein kinase (MEK) that is needed for cell growth. Drugs used in chemotherapy, such as paclitaxel, work in different ways to stop the growth of tumor cells, either by killing the cells, by stopping them from dividing, or by stopping them from spreading. Giving selumetinib together with paclitaxel may kill more tumor cells.",
+      "detailedDescription": "PRIMARY OBJECTIVE:\n\nI. To determine the safety and tolerability of three pre-planned arms of continuous, intermittent, and pulsatile selumetinib with paclitaxel as second-line treatment in patients with stage IIIB or IV NSCLC.\n\nSECONDARY OBJECTIVE:\n\nI. To determine the preliminary clinical response of continuous, intermittent, and pulsatile selumetinib with paclitaxel as second-line treatment in patients with stage IIIB or IV NSCLC.\n\nEXPLORATORY OBJECTIVES:\n\nII. To determine progression-free survival (PFS) and overall survival (OS) in patients treated with selumetinib/paclitaxel.\n\nII. To assess correlations between cell-free deoxyribonucleic acid (DNA) (cfDNA) molecular features from blood and molecular features and pathways from the biopsy samples, and use this as a surrogate measure of tumor response and duration of response as evaluated in the primary and secondary objectives.\n\nOUTLINE: This is a dose-finding study of selumetinib. The goal is to find out what dose and dosing schedule is the most effective in this population. Patients are randomized to 1 of 3 treatment arms.\n\nARM I: Patients receive selumetinib orally (PO) twice daily (BID) on days 1-21 and paclitaxel intravenously (IV) over a fixed rate on days 1 and 8.\n\nARM II: Patients receive selumetinib PO BID on days 1-5, 8-12, and 15-19 and paclitaxel as in Arm I.\n\nARM III: Patients receive selumetinib PO BID on days 1-3, 8-10, and 15-17 and paclitaxel as in Arm I.\n\nIn all three arms, treatment repeats every 21 days for 6 courses in the absence of disease progression or unacceptable toxicity. Patients experiencing clinical benefit from study treatment may continue treatment based on the principal investigator (PI) approval on a patient-by-patient basis.\n\nAfter completion of study treatment, patients are followed up at 30 days, every 8 weeks for 12 months, and then every 3 months thereafter."
+    },
+    "conditionsModule": {
+      "conditions": [
+        "Stage IIIB Non-Small Cell Lung Cancer AJCC v7",
+        "Stage IV Non-Small Cell Lung Cancer AJCC v7"
+      ]
+    },
+    "designModule": {
+      "studyType": "INTERVENTIONAL",
+      "phases": [
+        "PHASE1"
+      ],
+      "designInfo": {
+        "allocation": "RANDOMIZED",
+        "interventionModel": "PARALLEL",
+        "primaryPurpose": "TREATMENT",
+        "maskingInfo": {
+          "masking": "NONE"
+        }
+      },
+      "enrollmentInfo": {
+        "count": 23,
+        "type": "ACTUAL"
+      }
+    },
+    "armsInterventionsModule": {
+      "armGroups": [
+        {
+          "label": "Arm I (continuous selumetinib and paclitaxel)",
+          "type": "EXPERIMENTAL",
+          "description": "Patients receive selumetinib PO BID on days 1-21 and paclitaxel IV over a fixed rate on days 1 and 8.",
+          "interventionNames": [
+            "Other: Laboratory Biomarker Analysis",
+            "Drug: Paclitaxel",
+            "Other: Pharmacological Study",
+            "Drug: Selumetinib"
+          ]
+        },
+        {
+          "label": "Arm II (intermittent selumetinib and paclitaxel)",
+          "type": "EXPERIMENTAL",
+          "description": "Patients receive selumetinib PO BID on days 1-5, 8-12, and 15-19 and paclitaxel as in Arm I.",
+          "interventionNames": [
+            "Other: Laboratory Biomarker Analysis",
+            "Drug: Paclitaxel",
+            "Other: Pharmacological Study",
+            "Drug: Selumetinib"
+          ]
+        },
+        {
+          "label": "Arm III (pulsatile selumetinib and paclitaxel)",
+          "type": "EXPERIMENTAL",
+          "description": "Patients receive selumetinib PO BID on days 1-3, 8-10, and 15-17 and paclitaxel as in Arm I.",
+          "interventionNames": [
+            "Other: Laboratory Biomarker Analysis",
+            "Drug: Paclitaxel",
+            "Other: Pharmacological Study",
+            "Drug: Selumetinib"
+          ]
+        }
+      ],
+      "interventions": [
+        {
+          "type": "OTHER",
+          "name": "Laboratory Biomarker Analysis",
+          "description": "Correlative studies",
+          "armGroupLabels": [
+            "Arm I (continuous selumetinib and paclitaxel)",
+            "Arm II (intermittent selumetinib and paclitaxel)",
+            "Arm III (pulsatile selumetinib and paclitaxel)"
+          ]
+        },
+        {
+          "type": "DRUG",
+          "name": "Paclitaxel",
+          "description": "Given IV",
+          "armGroupLabels": [
+            "Arm I (continuous selumetinib and paclitaxel)",
+            "Arm II (intermittent selumetinib and paclitaxel)",
+            "Arm III (pulsatile selumetinib and paclitaxel)"
+          ],
+          "otherNames": [
+            "Anzatax",
+            "Asotax",
+            "Bristaxol",
+            "Praxel",
+            "Taxol",
+            "Taxol Konzentrat"
+          ]
+        },
+        {
+          "type": "OTHER",
+          "name": "Pharmacological Study",
+          "description": "Correlative studies",
+          "armGroupLabels": [
+            "Arm I (continuous selumetinib and paclitaxel)",
+            "Arm II (intermittent selumetinib and paclitaxel)",
+            "Arm III (pulsatile selumetinib and paclitaxel)"
+          ]
+        },
+        {
+          "type": "DRUG",
+          "name": "Selumetinib",
+          "description": "Given PO",
+          "armGroupLabels": [
+            "Arm I (continuous selumetinib and paclitaxel)",
+            "Arm II (intermittent selumetinib and paclitaxel)",
+            "Arm III (pulsatile selumetinib and paclitaxel)"
+          ],
+          "otherNames": [
+            "ARRY-142886",
+            "AZD6244",
+            "MEK Inhibitor AZD6244"
+          ]
+        }
+      ]
+    },
+    "outcomesModule": {
+      "primaryOutcomes": [
+        {
+          "measure": "Incidence of grade 3 or higher treatment-related adverse event (AE) using the National Cancer Institute (NCI) Common Terminology Criteria for Adverse Events (CTCAE) version 4.0",
+          "description": "Treatment arms will be summarized reporting the number of patients treated; the number who experience grade 3 or higher treatment-related AE. In addition, number of treatment cycles received will be summarized using descriptive statistics (median and range) by treatment arm. Comprehensive safety data on all toxicities will be tabulated by type, grade, duration, attribution to treatment, and treatment arm. A patient level summary by worst grade toxicity will be included. Laboratory data and concomitant medications associated with episodes of toxicity will be summarized as needed.",
+          "timeFrame": "Up to 30 days post-treatment"
+        },
+        {
+          "measure": "Proportion of patients with treatment-related dose limiting toxicities (DLT) using the National Cancer Institute (NCI)-Common Terminology Criteria for Adverse Events (CTCAE) version 4.0",
+          "description": "Treatment arms will be summarized reporting the number of patients treated; the number who experience DLT; the number of patients who discontinue therapy, and the reasons for discontinuation. In addition, number of treatment cycles received will be summarized using descriptive statistics (median and range) by treatment arm. Comprehensive safety data on all toxicities will be tabulated by type, grade, duration, attribution to treatment, and treatment arm. A patient level summary by worst grade toxicity will be included.",
+          "timeFrame": "21 days"
+        },
+        {
+          "measure": "Proportion of patients with treatment-related serious adverse events (SAEs) using the National Cancer Institute (NCI) Common Terminology Criteria for Adverse Events (CTCAE) version 4.0",
+          "description": "Treatment arms will be summarized reporting the number of patients treated; the number who experience SAEs. In addition, number of treatment cycles received will be summarized using descriptive statistics (median and range) by treatment arm. Comprehensive safety data on all toxicities will be tabulated by type, grade, duration, attribution to treatment, and treatment arm. A patient level summary by worst grade toxicity will be included. Laboratory data and concomitant medications associated with episodes of toxicity will be summarized as needed.",
+          "timeFrame": "Up to 30 days post-treatment"
+        }
+      ],
+      "secondaryOutcomes": [
+        {
+          "measure": "Best response complete response (CR), partial response (PR), stable disease (SD), or progressive disease (PD) using Response Evaluation Criteria in Solid Tumors (RECIST) version 1.1",
+          "timeFrame": "Up to 4 years"
+        },
+        {
+          "measure": "Disease control rate (DCR)",
+          "description": "DCR will be calculated as the proportion/percentage of patients with best overall response of CR, PR, or SD. Corresponding 95% confidence intervals, calculated by the binomial method, will be reported. In addition, patients in each response category (CR, PR, SD) will be summarized by descriptive statistics (median and range) with respect to time to onset of response and duration of response.",
+          "timeFrame": "Up to 4 years"
+        },
+        {
+          "measure": "Median overall survival (OS)",
+          "description": "The Kaplan-Meier method will be used to estimate OS per treatment arm.",
+          "timeFrame": "From randomization to death or date of censoring, assessed at 6 months"
+        },
+        {
+          "measure": "Median overall survival (OS)",
+          "description": "The Kaplan-Meier method will be used to estimate OS per treatment arm.",
+          "timeFrame": "From randomization to death or date of censoring, assessed at 12 months"
+        },
+        {
+          "measure": "Median progression-free survival (PFS) using Response Evaluation Criteria in Solid Tumors (RECIST) version 1.1",
+          "description": "The Kaplan-Meier method will be used to estimate PFS per treatment arm.",
+          "timeFrame": "From randomization until documented disease progression or death (by any cause, in the absence of progression), assessed at 6 months"
+        },
+        {
+          "measure": "Median progression-free survival (PFS) using Response Evaluation Criteria in Solid Tumors (RECIST) version 1.1",
+          "description": "The Kaplan-Meier method will be used to estimate PFS per treatment arm.",
+          "timeFrame": "From randomization until documented disease progression or death (by any cause, in the absence of progression), assessed at 12 months"
+        },
+        {
+          "measure": "Objective response rate (ORR)",
+          "description": "ORR will be estimated for the three pre-planned arms of selumetinib/paclitaxel. ORR will be calculated as the proportion/percentage of patients with best overall response of CR or PR.",
+          "timeFrame": "Up to 4 years"
+        },
+        {
+          "measure": "Overall survival (OS)",
+          "description": "The Kaplan-Meier method will be used to estimate OS per treatment arm.",
+          "timeFrame": "From randomization to death or date of censoring, assessed up to 4 years post-treatment"
+        },
+        {
+          "measure": "Progression free survival (PFS) using Response Evaluation Criteria in Solid Tumors (RECIST) version 1.1",
+          "description": "The Kaplan-Meier method will be used to estimate PFS per treatment arm.",
+          "timeFrame": "From randomization until documented disease progression or death (by any cause, in the absence of progression), assessed up to 4 years"
+        }
+      ]
+    },
+    "eligibilityModule": {
+      "eligibilityCriteria": "Inclusion Criteria:\n\n* Histologically and/or cytologically confirmed, non-small cell lung cancer (NSCLC) of adenocarcinoma histology at the time of initial diagnosis.\n\n  * Mixed tumors will be categorized by the predominant cell type; (Note: If small cell elements are present the patient is ineligible)\n  * Known mutational status of KRAS and BRAF oncogenes.\n  * For patients in whom mutational testing result is unknown or unavailable from a prior test, KRAS and BRAF testing will be performed (at a Clinical Laboratory Improvement Act (CLIA) -certified laboratory) using an archived or fresh biopsy as per standard of care, prior to enrollment.\n* Stage IIIB-IV, locally advanced or metastatic disease according to the 7th edition of the American Joint Committee on Cancer (AJCC) lung cancer Tumor, Node, Metastasis (TNM) classification system\n* Measurable disease as defined by Response Evaluation Criteria in Solid Tumors (RECIST) v1.1 criteria. Baseline measurements and evaluation of ALL sites of disease must be obtained within 4 weeks prior to enrollment.\n* Failure of at least one line of systemic anti-cancer therapy for advanced NSCLC defined as either of the following:\n\n  * Radiological documentation of disease progression (or failure to achieve a response) or\n  * Discontinuation due to toxicity\n  * Prior treatment with immunotherapy as well as maintenance therapy, including both continuation and switch maintenance will be allowed if received at least 14 days before start date of selumetinib-paclitaxel (immunotherapy is not allowed within 14 days of the start date of selumetinib-paclitaxel).\n* Eastern Cooperative Oncology Group (ECOG) performance status of 0 or 1\n* Estimated life expectancy, in the judgment of the investigator, which will permit receipt of treatment of 12 weeks or more\n* Absolute neutrophil count \\>= 1.5x10\\^9 /L (1500 per mm\\^3)\n* Platelets \\>= 100x10\\^9 /L (100,000 per mm\\^3)\n* Hemoglobin \\> 9.0 g/dL\n* Serum bilirubin \\< 1.5 x upper limit of normal (ULN) for institution \\[Exception: Patients who have elevated serum bilirubin due to underlying Gilbert's Syndrome or familial benign unconjugated hyperbilirubinemia are allowed.\\]\n* Aspartate aminotransferase (AST) (serum glutamic-oxaloacetic transaminase \\[SGOT\\]) \\< 2.5 x upper limit of normal (ULN) for institution (or \\< 5.0 x ULN in presence of liver metastases)\n* Alanine aminotransferase (ALT) (serum glutamate pyruvate transaminase \\[SGPT\\]) \\< 2.5 x upper limit of normal (ULN) for institution (or \\< 5.0 x ULN in presence of liver metastases).\n* Adequate renal function as defined by one of the following:\n* Serum creatinine \\<= 1.5 mg/dl OR\n* Serum creatinine clearance \\> 50ml/min (calculated by Cockcroft-Gault formula).\n* Females of child bearing potential that are sexually active must agree to either practice 2 medically accepted highly effective methods of contraception at the same time or abstain from heterosexual intercourse from the time of signing the informed consent through 30 days after the last dose of study drug.\n* Negative test for pregnancy is required for females of child-bearing potential; A female of child bearing potential is any woman, regardless of sexual orientation or whether they have undergone tubal ligation, who meets the following criteria:\n\n  * has not undergone a hysterectomy or bilateral oophorectomy; or\n  * has not been naturally postmenopausal for at least 24 consecutive months (i.e., has had menses at any time in the preceding 24 consecutive months or 730 days).\n* Conception while on treatment must be avoided\n* Males of child bearing potential must agree to practice effective barrier contraception during the entire study treatment period and through 6 months) after the last dose of study drug, (includes males surgically sterilized (i.e. status post vasectomy).\n* Ability to understand and the willingness to sign a written informed consent and Health Insurance Portability and Accountability Act (HIPAA) document/s.\n\nExclusion Criteria:\n\n* Known actionable mutations (e.g., EGFR, ALK, ROS1), against which there is available treatment. Patients who progressed on such treatment, i.e., have developed acquired resistance and are no longer reasonably expected to derive therapeutic benefit are eligible for the trial.\n* Any prior treatment with either a MEK, RAS, or RAF inhibitor for advanced or metastatic NSCLC.\n* A history of hypersensitivity to selumetinib, or any excipient agents (e.g. Captisol or TPGS- a water soluble form of vitamin E)\n* Any unresolved toxicity \\> Common Terminology Criteria for Adverse Events (CTCAE) grade 2 despite optimal care/support, from previous anti-cancer therapy, except for alopecia, within 7 days prior to cycle 1, day 1.\n* Cardiac conditions as follows:\n\n  * Uncontrolled hypertension (Blood Pressure (BP) \\>= 150/95 mmHg, despite medical therapy)\n  * Left ventricular ejection fraction (LVEF) \\< 55%, measured by echocardiography\n  * Atrial fibrillation with a ventricular rate \\> 100 bpm on electrocardiogram (ECG) at rest\n  * Symptomatic heart failure New York Heart Association (NYHA ) grade II-IV)\n  * Prior or current cardiomyopathy\n  * Severe valvular heart disease\n  * Uncontrolled angina (Canadian Cardiovascular Society grade II-IV despite medical therapy)\n  * Acute coronary syndrome within 6 months prior to starting treatment\n* Ophthalmological conditions as follows:\n\n  * Intra-ocular pressure \\> 21 mmHg, or uncontrolled glaucoma (irrespective of intra-ocular pressure)\n  * Current or past history of central serous retinopathy or retinal vein occlusion.\n* Prior treatment with chemotherapy or immunotherapy within 14 days prior to enrollment. Subjects receiving palliative radiation to central nervous system (CNS) disease within 7 days may be eligible with PI approval. If the most recent treatment line is an EGFR-TKI, the washout period is a minimum of 3 days before the start of paclitaxel/selumetinib (i.e. treatment with the EGFR-TKI may continue until 3 days before start of study treatment). For other targeted therapy agents, the washout period will be 5 half-lives, prior to start of treatment on study.\n* Major surgical procedure within 21 days prior to enrollment\n* Brain metastases or spinal cord compression unless asymptomatic, treated and stable off steroids and anti-convulsants for at least 30 days\n* Received an investigational drug within 30 days of starting treatment, or have not recovered from side effects of an investigational drug\n* Female patients who are pregnant or breast-feeding (confirmation that the patient is not pregnant must be by a negative pregnancy test result obtained during screening; pregnancy testing is required of women of childbearing potential but not required for post-menopausal or surgically, sterilized women)\n* Any evidence of severe or uncontrolled systemic disease, including, but not limited to, ongoing or active infection, active bleeding diatheses or renal transplant, including any patient known to have hepatitis B, hepatitis C, or human immunodeficiency virus (HIV).\n* Serious medical or psychiatric illness/condition likely in the judgment of the investigator to interfere with compliance with protocol treatment/research",
+      "healthyVolunteers": false,
+      "sex": "ALL",
+      "minimumAge": "18 Years",
+      "stdAges": [
+        "ADULT",
+        "OLDER_ADULT"
+      ]
+    },
+    "contactsLocationsModule": {
+      "overallOfficials": [
+        {
+          "name": "Brian Druker, MD",
+          "affiliation": "OHSU Knight Cancer Institute",
+          "role": "PRINCIPAL_INVESTIGATOR"
+        }
+      ],
+      "locations": [
+        {
+          "facility": "OHSU Knight Cancer Institute",
+          "city": "Portland",
+          "state": "Oregon",
+          "zip": "97239",
+          "country": "United States",
+          "geoPoint": {
+            "lat": 45.52345,
+            "lon": -122.67621
+          }
+        }
+      ]
+    }
+  },
+  "derivedSection": {
+    "miscInfoModule": {
+      "versionHolder": "2025-04-08"
+    },
+    "conditionBrowseModule": {
+      "meshes": [
+        {
+          "id": "D008175",
+          "term": "Lung Neoplasms"
+        },
+        {
+          "id": "D002289",
+          "term": "Carcinoma, Non-Small-Cell Lung"
+        }
+      ],
+      "ancestors": [
+        {
+          "id": "D012142",
+          "term": "Respiratory Tract Neoplasms"
+        },
+        {
+          "id": "D013899",
+          "term": "Thoracic Neoplasms"
+        },
+        {
+          "id": "D009371",
+          "term": "Neoplasms by Site"
+        },
+        {
+          "id": "D009369",
+          "term": "Neoplasms"
+        },
+        {
+          "id": "D008171",
+          "term": "Lung Diseases"
+        },
+        {
+          "id": "D012140",
+          "term": "Respiratory Tract Diseases"
+        },
+        {
+          "id": "D002283",
+          "term": "Carcinoma, Bronchogenic"
+        },
+        {
+          "id": "D001984",
+          "term": "Bronchial Neoplasms"
+        }
+      ],
+      "browseLeaves": [
+        {
+          "id": "M11172",
+          "name": "Lung Neoplasms",
+          "asFound": "Lung Cancer",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M5546",
+          "name": "Carcinoma, Non-Small-Cell Lung",
+          "asFound": "Non-small Cell Lung Cancer",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M5534",
+          "name": "Carcinoma",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M14979",
+          "name": "Respiratory Tract Neoplasms",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M16658",
+          "name": "Thoracic Neoplasms",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M11168",
+          "name": "Lung Diseases",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M14977",
+          "name": "Respiratory Tract Diseases",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M5540",
+          "name": "Carcinoma, Bronchogenic",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M5260",
+          "name": "Bronchial Neoplasms",
+          "relevance": "LOW"
+        }
+      ],
+      "browseBranches": [
+        {
+          "abbrev": "BC04",
+          "name": "Neoplasms"
+        },
+        {
+          "abbrev": "BC08",
+          "name": "Respiratory Tract (Lung and Bronchial) Diseases"
+        },
+        {
+          "abbrev": "All",
+          "name": "All Conditions"
+        }
+      ]
+    },
+    "interventionBrowseModule": {
+      "meshes": [
+        {
+          "id": "D017239",
+          "term": "Paclitaxel"
+        },
+        {
+          "id": "D000068196",
+          "term": "Albumin-Bound Paclitaxel"
+        }
+      ],
+      "ancestors": [
+        {
+          "id": "D000972",
+          "term": "Antineoplastic Agents, Phytogenic"
+        },
+        {
+          "id": "D000970",
+          "term": "Antineoplastic Agents"
+        },
+        {
+          "id": "D050257",
+          "term": "Tubulin Modulators"
+        },
+        {
+          "id": "D050256",
+          "term": "Antimitotic Agents"
+        },
+        {
+          "id": "D050258",
+          "term": "Mitosis Modulators"
+        },
+        {
+          "id": "D045504",
+          "term": "Molecular Mechanisms of Pharmacological Action"
+        }
+      ],
+      "browseLeaves": [
+        {
+          "id": "M19537",
+          "name": "Paclitaxel",
+          "asFound": "Criteria",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M231",
+          "name": "Albumin-Bound Paclitaxel",
+          "asFound": "Criteria",
+          "relevance": "HIGH"
+        },
+        {
+          "id": "M26197",
+          "name": "Tubulin Modulators",
+          "relevance": "LOW"
+        },
+        {
+          "id": "M26196",
+          "name": "Antimitotic Agents",
+          "relevance": "LOW"
+        }
+      ],
+      "browseBranches": [
+        {
+          "abbrev": "ANeo",
+          "name": "Antineoplastic Agents"
+        },
+        {
+          "abbrev": "All",
+          "name": "All Drugs and Chemicals"
+        }
+      ]
+    }
+  },
+  "hasResults": false
+}

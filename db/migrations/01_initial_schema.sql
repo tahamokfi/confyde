@@ -149,3 +149,25 @@ DROP POLICY IF EXISTS users_select_policy ON users;
 CREATE POLICY users_select_policy ON users
   FOR SELECT
   USING (auth.uid() = user_id);
+
+-- create a policy for the projects table that allows users to delete projects for their company
+CREATE POLICY "Users can delete projects for their company" 
+ON projects
+FOR DELETE 
+USING (
+  auth.uid() IN (
+    SELECT user_id FROM users 
+    WHERE company_id = projects.company_id
+  )
+);
+
+-- create a policy for the scenarios table that allows users to delete scenarios for their company
+CREATE POLICY "Users can delete scenarios for their company" 
+ON scenarios
+FOR DELETE 
+USING (
+  auth.uid() IN (
+    SELECT user_id FROM users 
+    WHERE company_id = scenarios.company_id
+  )
+);

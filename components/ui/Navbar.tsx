@@ -16,14 +16,12 @@ interface NavbarProps {
   projects: Project[];
   selectedProject?: Project | null;
   onProjectSelect: (project: Project) => void;
-  onCreateProject: () => void;
 }
 
 export default function Navbar({ 
   projects, 
   selectedProject, 
-  onProjectSelect, 
-  onCreateProject 
+  onProjectSelect
 }: NavbarProps) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -92,15 +90,6 @@ export default function Navbar({
                         {project.name}
                       </button>
                     ))}
-                    <button
-                      onClick={() => {
-                        onCreateProject();
-                        setIsMenuOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
-                    >
-                      + Create New Project
-                    </button>
                   </div>
                 </div>
               )}

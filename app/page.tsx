@@ -40,7 +40,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-[#0c323d]">Confyde</span>
+              <span className="text-2xl font-bold text-[#0c323d]">Confyde AI</span>
             </div>
             <div className="flex space-x-4">
               <Link 
@@ -70,12 +70,12 @@ export default function Home() {
               </div>
               <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
                 <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-                  <span className="block text-white">Transforming Clinical Trial Design</span>
-                  <span className="block text-blue-200 mt-2">with Purpose-Built Technology</span>
+                  <span className="block text-white">Accelerate Clinical Trials</span>
+                  <span className="block text-blue-200 mt-2">with Confydence AI</span>
                 </h1>
                 <p className="mt-6 max-w-lg mx-auto text-center text-xl text-white sm:max-w-3xl">
-                  Streamline cross-functional clinical trial design with unified data sources, 
-                  reducing risk and saving time and money on your 9-figure investment decisions.
+                  Streamline cross-functional clinical trial design with proprietary technology, 
+                  reducing risk and increasing confidence in investment decisions.
                 </p>
                 <div className="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
@@ -102,9 +102,9 @@ export default function Home() {
         <div id="features" className="py-16 bg-gray-50 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h2 className="text-base font-semibold text-blue-600 tracking-wide uppercase">Efficient Solutions</h2>
+              <h2 className="text-base font-semibold text-blue-600 tracking-wide uppercase">Proprietary AI Solutions</h2>
               <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight">
-                Replace Repetitive Manual Work
+                Replace Repetitive Manual Tasks
               </p>
               <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
                 Our platform eliminates inefficiencies in clinical trial design with cutting-edge technology.
@@ -145,7 +145,7 @@ export default function Home() {
                       </div>
                       <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">Time & Cost Savings</h3>
                       <p className="mt-5 text-base text-gray-500">
-                        Reduce your investment risk with automated workflows that save time and minimize human error.
+                        Reduces investment risk with automated workflows that save time and minimize error.
                       </p>
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export default function Home() {
                       </div>
                       <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">Reduce Investment Risk</h3>
                       <p className="mt-5 text-base text-gray-500">
-                        Make informed 9-figure investment decisions with comprehensive data analysis and risk assessment tools.
+                        Make informed investment decisions with AI-powered tools.
                       </p>
                     </div>
                   </div>
@@ -209,98 +209,25 @@ export default function Home() {
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8 xl:col-span-1">
               <div className="text-white text-2xl font-bold">Confyde</div>
-              <p className="text-gray-300 text-base">
-                Making clinical trial design efficient, data-driven, and cost-effective.
-              </p>
-              <div className="flex space-x-6">
-                {/* Social links would go here */}
-              </div>
             </div>
             <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Solutions</h3>
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Contact Us</h3>
                   <ul className="mt-4 space-y-4">
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Portfolio Management
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Protocol Design
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Scenario Planning
-                      </a>
-                    </li>
                   </ul>
                 </div>
                 <div className="mt-12 md:mt-0">
-                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Support</h3>
+                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">About</h3>
                   <ul className="mt-4 space-y-4">
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Documentation
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Guides
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Contact Us
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="md:grid md:grid-cols-2 md:gap-8">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Company</h3>
-                  <ul className="mt-4 space-y-4">
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        About
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Careers
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Blog
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="mt-12 md:mt-0">
-                  <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Legal</h3>
-                  <ul className="mt-4 space-y-4">
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Privacy
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="text-base text-gray-300 hover:text-white">
-                        Terms
-                      </a>
-                    </li>
-                  </ul>
+                   </ul>
                 </div>
               </div>
             </div>
           </div>
           <div className="mt-12 border-t border-gray-700 pt-8">
             <p className="text-base text-gray-400 xl:text-center">
-              &copy; 2023 Confyde. All rights reserved.
+              &copy; 2025 Confyde. All rights reserved.
             </p>
           </div>
         </div>

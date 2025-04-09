@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
+import eventBus from '@/lib/eventBus';
 
 interface Project {
   id: string;
@@ -19,10 +20,33 @@ export default function ProjectSelector() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch projects on component mount
+  // Fetch projects on component mount and set up event listeners
   useEffect(() => {
     fetchProjects();
-  }, []);
+    
+    // Subscribe to project events
+    const addedUnsubscribe = eventBus.on('project-added', () => {
+      console.log('ProjectSelector: Received project-added event');
+      fetchProjects();
+    });
+    
+    const deletedUnsubscribe = eventBus.on('project-deleted', (projectId) => {
+      console.log('ProjectSelector: Received project-deleted event', projectId);
+      fetchProjects();
+      
+      // If the deleted project is the currently selected one, we need to select another one
+      if (selectedProject && selectedProject.id === projectId) {
+        // This will be handled by fetchProjects, which will select the first available project
+        // or handle the case when no projects are available
+      }
+    });
+    
+    // Cleanup subscriptions on unmount
+    return () => {
+      addedUnsubscribe();
+      deletedUnsubscribe();
+    };
+  }, []); // Remove selectedProject from dependencies to prevent infinite loops
 
   // Check URL for project param on mount and when searchParams changes
   useEffect(() => {
@@ -103,12 +127,7 @@ export default function ProjectSelector() {
   if (error) return <div className="text-sm text-red-500 px-4">Error: {error}</div>;
   if (projects.length === 0) return (
     <div className="px-4 py-2">
-      <button 
-        onClick={handleCreateProject}
-        className="w-full text-left text-sm text-teal-500 hover:text-teal-400"
-      >
-        + Create New Project
-      </button>
+      <div className="text-sm text-gray-400">No projects available</div>
     </div>
   );
 
@@ -140,12 +159,6 @@ export default function ProjectSelector() {
                 {project.name}
               </button>
             ))}
-            <button
-              onClick={handleCreateProject}
-              className="block w-full text-left px-3 py-2 text-sm text-teal-500 hover:bg-[#1c4653]"
-            >
-              + Create New Project
-            </button>
           </div>
         </div>
       )}
