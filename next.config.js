@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     // Server Actions are available by default in Next.js 14+
-    missingSuspenseWithCSRBailout: false,
+    // missingSuspenseWithCSRBailout: false, // Removed this temporary fix
   },
 };
 

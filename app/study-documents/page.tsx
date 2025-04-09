@@ -2,8 +2,8 @@
 
 import { Suspense } from 'react';
 
-// Force dynamic rendering for this page
-export const dynamic = 'force-dynamic';
+// Force dynamic rendering for this page - REMOVED
+// export const dynamic = 'force-dynamic';
 
 export default function StudyDocuments() {
   return (

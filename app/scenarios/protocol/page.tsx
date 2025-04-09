@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtocolForm from '@/components/forms/ProtocolForm';
 import ScenarioForm from '@/components/forms/ScenarioForm';
 import { supabase } from '@/lib/supabaseClient';
 import { ChevronUpIcon, ChevronDownIcon, MagnifyingGlassIcon, DocumentTextIcon, ArrowPathIcon, UserGroupIcon, UserIcon, BeakerIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 
-// Create a client component that uses useSearchParams
-function ProtocolPageContent() {
+export default function ProtocolPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const scenarioId = searchParams.get('id');
@@ -187,15 +186,15 @@ function ProtocolPageContent() {
 
       setFormSuccess(true);
       
-      // Refresh scenario data
+    // Refresh scenario data
       const { data } = await supabase
-        .from('scenarios')
-        .select('*')
+          .from('scenarios')
+          .select('*')
         .eq('id', scenario.id)
-        .single();
-        
+          .single();
+
       if (data) {
-        setScenario(data);
+          setScenario(data);
       }
     } catch (error: any) {
       setError(error.message || 'An error occurred while updating the scenario');
@@ -674,18 +673,5 @@ function ProtocolPageContent() {
         </div>
       )}
     </div>
-  );
-}
-
-// Main page component wrapped with Suspense
-export default function ProtocolPage() {
-  return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    }>
-      <ProtocolPageContent />
-    </Suspense>
   );
 } 

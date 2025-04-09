@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
@@ -17,6 +17,11 @@ interface Scenario {
   name: string;
   project_id: string;
   created_at?: string;
+}
+
+// Fallback for scenario content
+function ScenarioContentFallback() {
+  return <div className="p-6">Loading scenario details...</div>;
 }
 
 export default function ScenariosLayout({
@@ -167,7 +172,8 @@ export default function ScenariosLayout({
   }, [scenarioId, scenarios]);
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    // Keep a top-level loading state if needed
+    return <div className="flex items-center justify-center h-screen">Loading Layout...</div>;
   }
 
   return (
@@ -249,9 +255,12 @@ export default function ScenariosLayout({
           </nav>
         </div>
 
-        <div className="p-6">
-          {children}
-        </div>
+        {/* Wrap the actual page content (children) in Suspense */}
+        <Suspense fallback={<ScenarioContentFallback />}>
+          <div className="p-6">
+            {children}
+          </div>
+        </Suspense>
       </main>
     </div>
   );
