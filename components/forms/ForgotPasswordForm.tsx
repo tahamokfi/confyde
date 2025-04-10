@@ -25,17 +25,23 @@ export default function ForgotPasswordForm() {
     setLoading(true);
     
     try {
-      // Send password reset email - redirect directly to the set-password page
+      // Send password reset email - redirect to the root domain
+      // The main page will handle redirecting to the appropriate page
+      console.log('Sending password reset email to:', email);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/set-password`,
+        redirectTo: window.location.origin,
       });
       
       if (error) {
         throw error;
       }
       
-      setSuccessMessage('Password reset instructions have been sent to your email');
+      setSuccessMessage(
+        'Password reset instructions have been sent to your email. ' +
+        'Please check your inbox and spam folder.'
+      );
     } catch (err: any) {
+      console.error('Error sending reset email:', err);
       setError(err.message || 'Failed to send password reset email');
     } finally {
       setLoading(false);

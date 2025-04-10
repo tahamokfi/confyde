@@ -12,13 +12,32 @@ function RedirectHandler() {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Check if this is a password reset redirect (has code parameter)
+    // For Supabase password reset, the auth hash is in the URL fragment (#access_token=...)
+    // or a code parameter. We need to handle both cases.
     const code = searchParams.get('code');
     
     if (code) {
       console.log('Password reset code detected, redirecting to set-password page');
-      // If this is a password reset, redirect to the set-password page
-      router.push(`/auth/set-password?code=${code}`);
+      
+      // Check if we're in a browser environment (needed for accessing window)
+      if (typeof window !== 'undefined') {
+        // Preserve the hash fragment if it exists
+        const fullUrl = window.location.href;
+        const hasHash = fullUrl.includes('#');
+        
+        // If there's a hash fragment, pass the entire URL to the set-password page
+        // This is important because Supabase auth stores recovery tokens in the hash
+        if (hasHash) {
+          const hash = fullUrl.split('#')[1];
+          router.push(`/auth/set-password#${hash}`);
+        } else {
+          // Otherwise just pass the code as a parameter
+          router.push(`/auth/set-password?code=${code}`);
+        }
+      } else {
+        // Fallback for SSR
+        router.push(`/auth/set-password?code=${code}`);
+      }
       return;
     }
     

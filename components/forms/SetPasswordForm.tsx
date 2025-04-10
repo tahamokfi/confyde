@@ -15,54 +15,54 @@ export default function SetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [passwordUpdateAllowed, setPasswordUpdateAllowed] = useState(false);
-
-  // Get code from URL
-  const code = searchParams.get('code');
+  const [authStatus, setAuthStatus] = useState('checking');
 
   // Handle the session update when the component mounts
   useEffect(() => {
-    const processCode = async () => {
-      if (code) {
-        try {
-          // Exchange the code for a session - verify OTP
-          console.log('Processing password reset code');
-          const { data, error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: code,
-            type: 'recovery'
-          });
-
-          if (verifyError) {
-            console.error('Error verifying password reset code:', verifyError);
-            setError('Invalid or expired password reset link. Please request a new one.');
-          } else if (data && data.session) {
-            console.log('Password reset code verified successfully');
-            setPasswordUpdateAllowed(true);
-          }
-        } catch (err) {
-          console.error('Error processing code:', err);
-          setError('There was a problem processing your password reset link.');
-        }
-      } else {
-        // Check for auth state change events
+    const setupAuth = async () => {
+      try {
+        // Let Supabase handle the auth state automatically
+        // It will process the hash fragment or recovery token
+        console.log('Setting up auth listener...');
+        
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'PASSWORD_RECOVERY' && session) {
-            console.log('Password recovery session established.');
+          console.log('Auth state change event:', event);
+          
+          if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+            console.log('Auth success:', event);
             setPasswordUpdateAllowed(true);
-          } else if (event === 'SIGNED_IN') {
-            console.log('User already signed in.');
-            setPasswordUpdateAllowed(true);
+            setAuthStatus('authenticated');
+          } else if (event === 'SIGNED_OUT') {
+            setPasswordUpdateAllowed(false);
+            setAuthStatus('signed_out');
           }
         });
 
+        // Check if we already have a session
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          console.log('Existing session found');
+          setPasswordUpdateAllowed(true);
+          setAuthStatus('authenticated');
+        } else {
+          console.log('No existing session');
+          setAuthStatus('no_session');
+        }
+
         // Cleanup listener on unmount
         return () => {
+          console.log('Cleaning up auth listener');
           authListener?.subscription.unsubscribe();
         };
+      } catch (err) {
+        console.error('Error setting up auth:', err);
+        setError('There was a problem setting up authentication.');
+        setAuthStatus('error');
       }
     };
 
-    processCode();
-  }, [code, supabase.auth]);
+    setupAuth();
+  }, [supabase.auth]);
 
   // Check if user profile exists and create if it doesn't
   const ensureUserProfile = async (userId: string, userEmail: string) => {
@@ -132,7 +132,7 @@ export default function SetPasswordForm() {
     }
 
     if (!passwordUpdateAllowed) {
-      setError('Your password reset session has expired. Please request a new reset link.');
+      setError('Unable to update password. Please request a new password reset link.');
       return;
     }
     
@@ -174,6 +174,36 @@ export default function SetPasswordForm() {
       setLoading(false);
     }
   };
+
+  // Show appropriate message based on auth status
+  if (authStatus === 'checking') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center p-6">
+          <div className="w-8 h-8 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+        </div>
+        <p className="text-center text-gray-500">Verifying your session...</p>
+      </div>
+    );
+  }
+
+  if (authStatus === 'error' || authStatus === 'no_session') {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          {error || 'Invalid or expired password reset link. Please request a new one.'}
+        </div>
+        <div className="flex justify-center">
+          <a
+            href="/auth/forgot-password"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Request New Link
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
