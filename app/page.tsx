@@ -1,16 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    // Check if this is a password reset redirect (has code parameter)
+    const code = searchParams.get('code');
+    const type = searchParams.get('type');
+    
+    if (code) {
+      console.log('Password reset code detected, redirecting to set-password page');
+      // If this is a password reset, redirect to the set-password page
+      router.push(`/auth/set-password?code=${code}`);
+      return;
+    }
+    
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       
@@ -23,7 +35,7 @@ export default function Home() {
     };
     
     checkUser();
-  }, [router]);
+  }, [router, searchParams]);
   
   if (loading) {
     return (

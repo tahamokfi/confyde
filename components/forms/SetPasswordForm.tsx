@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function SetPasswordForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClientComponentClient();
   
   const [password, setPassword] = useState('');
@@ -13,29 +14,55 @@ export default function SetPasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [passwordUpdateAllowed, setPasswordUpdateAllowed] = useState(false);
+
+  // Get code from URL
+  const code = searchParams.get('code');
 
   // Handle the session update when the component mounts
   useEffect(() => {
-    const handleAuthChange = async (event: string, session: any) => {
-      // When the user clicks the reset link, Supabase redirects here
-      // and the session should be updated automatically by the Auth Helper.
-      // We don't need to manually call verifyOtp if the session is present.
-      if (event === 'PASSWORD_RECOVERY' && session) {
-        // User is now authenticated, ready to set new password
-        console.log('Password recovery session established.');
-      } else if (event === 'SIGNED_IN') {
-        // This might happen if the user was already logged in
-        console.log('User already signed in.');
+    const processCode = async () => {
+      if (code) {
+        try {
+          // Exchange the code for a session - verify OTP
+          console.log('Processing password reset code');
+          const { data, error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash: code,
+            type: 'recovery'
+          });
+
+          if (verifyError) {
+            console.error('Error verifying password reset code:', verifyError);
+            setError('Invalid or expired password reset link. Please request a new one.');
+          } else if (data && data.session) {
+            console.log('Password reset code verified successfully');
+            setPasswordUpdateAllowed(true);
+          }
+        } catch (err) {
+          console.error('Error processing code:', err);
+          setError('There was a problem processing your password reset link.');
+        }
+      } else {
+        // Check for auth state change events
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'PASSWORD_RECOVERY' && session) {
+            console.log('Password recovery session established.');
+            setPasswordUpdateAllowed(true);
+          } else if (event === 'SIGNED_IN') {
+            console.log('User already signed in.');
+            setPasswordUpdateAllowed(true);
+          }
+        });
+
+        // Cleanup listener on unmount
+        return () => {
+          authListener?.subscription.unsubscribe();
+        };
       }
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(handleAuthChange);
-
-    // Cleanup listener on unmount
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
+    processCode();
+  }, [code, supabase.auth]);
 
   // Check if user profile exists and create if it doesn't
   const ensureUserProfile = async (userId: string, userEmail: string) => {
@@ -101,6 +128,11 @@ export default function SetPasswordForm() {
     
     if (password.length < 8) {
       setError('Password must be at least 8 characters');
+      return;
+    }
+
+    if (!passwordUpdateAllowed) {
+      setError('Your password reset session has expired. Please request a new reset link.');
       return;
     }
     
