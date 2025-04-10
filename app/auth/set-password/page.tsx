@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Suspense } from 'react';
 import SetPasswordForm from '@/components/forms/SetPasswordForm';
 
 export default function SetPasswordPage() {
@@ -17,7 +18,13 @@ export default function SetPasswordPage() {
           <p className="mt-2 text-gray-600">Create a password for your account</p>
         </div>
         
-        <SetPasswordForm />
+        <Suspense fallback={
+          <div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center">
+            <div className="w-8 h-8 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+          </div>
+        }>
+          <SetPasswordForm />
+        </Suspense>
         
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">

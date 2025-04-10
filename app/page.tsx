@@ -1,20 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 
-export default function Home() {
+// Component that handles the redirect logic
+function RedirectHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     // Check if this is a password reset redirect (has code parameter)
     const code = searchParams.get('code');
-    const type = searchParams.get('type');
     
     if (code) {
       console.log('Password reset code detected, redirecting to set-password page');
@@ -27,7 +26,6 @@ export default function Home() {
       const { data } = await supabase.auth.getSession();
       
       if (data.session) {
-        setUser(data.session.user);
         router.push('/dashboard');
       } else {
         setLoading(false);
@@ -39,6 +37,25 @@ export default function Home() {
   
   if (loading) {
     return (
+      <div className="flex items-center justify-center">
+        <div className="w-8 h-8 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+  
+  return null;
+}
+
+export default function Home() {
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    // Simpler loading state management for the whole page
+    setLoading(false);
+  }, []);
+  
+  if (loading) {
+    return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="w-8 h-8 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
       </div>
@@ -47,6 +64,15 @@ export default function Home() {
   
   return (
     <div className="min-h-screen bg-white">
+      {/* Suspense boundary for the redirect handler */}
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-16">
+          <div className="w-6 h-6 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+        </div>
+      }>
+        <RedirectHandler />
+      </Suspense>
+      
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
