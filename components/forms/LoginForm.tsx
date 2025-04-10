@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { handleStringChange } from '@/lib/formUtils';
 import { signInWithEmail } from '@/lib/authUtils';
 import { supabase } from '@/lib/supabaseClient';
@@ -32,25 +33,50 @@ export default function LoginForm() {
       console.log("Signed in successfully:", user.id);
 
       // Get user's company details directly from Supabase
-      const { data: userData, error: userError } = await supabase
+      // Use select() without single() to handle missing or multiple profiles
+      const { data: usersData, error: userError } = await supabase
         .from('users')
         .select('company_id')
-        .eq('user_id', user.id)
-        .single();
+        .eq('user_id', user.id);
 
       if (userError) {
-        throw new Error(userError.message);
+        // Handle potential errors during the query itself
+        console.error("Error fetching user profile:", userError);
+        throw new Error(`Failed to fetch user profile: ${userError.message}`);
       }
+
+      if (!usersData || usersData.length === 0) {
+        // No profile found for this authenticated user
+        console.error("No user profile found for user ID:", user.id);
+        setError('User profile not found. Please contact support or try signing up again.');
+        await supabase.auth.signOut(); // Sign out the user as their profile is incomplete
+        setLoading(false);
+        return;
+      }
+
+      if (usersData.length > 1) {
+        // Multiple profiles found - data integrity issue
+        console.error("Multiple user profiles found for user ID:", user.id);
+        setError('Inconsistent user data found. Please contact support.');
+        await supabase.auth.signOut(); // Sign out the user due to data inconsistency
+        setLoading(false);
+        return;
+      }
+
+      // Exactly one profile found, proceed
+      const userProfile = usersData[0];
+      const userCompanyId = userProfile.company_id;
 
       // Get company name
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .select('name')
-        .eq('id', userData.company_id)
-        .single();
+        .eq('id', userCompanyId)
+        .single(); // Expecting exactly one company for the ID
         
       if (companyError) {
-        throw new Error(companyError.message);
+        console.error("Error fetching company data:", companyError);
+        throw new Error(`Failed to fetch company data: ${companyError.message}`);
       }
 
       // Verify company match
@@ -58,18 +84,17 @@ export default function LoginForm() {
         router.push('/dashboard');
       } else {
         setError('You do not have access to the selected company');
-        // Sign out user if company doesn't match
         await supabase.auth.signOut();
       }
     } catch (error: any) {
       console.error("Login error:", error);
       setError(error.message || 'An error occurred during login');
       
-      // Sign out if there was an error
+      // Sign out if there was an error during profile/company fetch or validation
       try {
         await supabase.auth.signOut();
       } catch (signOutError) {
-        console.error("Error signing out:", signOutError);
+        console.error("Error signing out after login failure:", signOutError);
       }
     } finally {
       setLoading(false);
@@ -113,6 +138,11 @@ export default function LoginForm() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          <div className="mt-1 text-right">
+            <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+              Forgot password?
+            </Link>
+          </div>
         </div>
         
         <div className="mb-6">
