@@ -24,11 +24,34 @@ function ScenarioContentFallback() {
   return <div className="p-6">Loading scenario details...</div>;
 }
 
-export default function ScenariosLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Fallback for layout content while searchParams load
+function LayoutFallback() {
+  return (
+    <div className="flex flex-col h-full">
+      <header className="bg-white shadow-sm py-4 px-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Scenario Design
+          </h1>
+          <div className="flex items-center space-x-3">
+            <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+          </div>
+        </div>
+      </header>
+      <main className="flex-1 overflow-auto">
+        <div className="p-6 animate-pulse">
+          <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3 mb-8"></div>
+          <div className="h-8 bg-gray-200 rounded w-full mb-4"></div>
+          <div className="h-64 bg-gray-100 rounded w-full"></div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// Inner component that uses useSearchParams - will be wrapped with Suspense
+function ScenariosLayoutInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -255,13 +278,24 @@ export default function ScenariosLayout({
           </nav>
         </div>
 
-        {/* Wrap the actual page content (children) in Suspense */}
+        {/* Child content with Suspense */}
         <Suspense fallback={<ScenarioContentFallback />}>
-          <div className="p-6">
-            {children}
-          </div>
+          {children}
         </Suspense>
       </main>
     </div>
+  );
+}
+
+// Main layout that wraps the inner layout with Suspense
+export default function ScenariosLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<LayoutFallback />}>
+      <ScenariosLayoutInner>{children}</ScenariosLayoutInner>
+    </Suspense>
   );
 } 

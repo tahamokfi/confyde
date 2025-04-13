@@ -1,7 +1,21 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import LoginForm from '@/components/forms/LoginForm';
+
+// Loading fallback for the suspense boundary
+function LoginFormSkeleton() {
+  return (
+    <div className="max-w-md w-full bg-white p-6 rounded-lg shadow-md animate-pulse">
+      <div className="h-8 bg-gray-200 rounded mb-6"></div>
+      <div className="h-10 bg-gray-200 rounded mb-4"></div>
+      <div className="h-10 bg-gray-200 rounded mb-4"></div>
+      <div className="h-10 bg-gray-200 rounded mb-6"></div>
+      <div className="h-12 bg-gray-200 rounded"></div>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   return (
@@ -17,7 +31,9 @@ export default function LoginPage() {
           <p className="mt-2 text-gray-600">Please sign in to your account</p>
         </div>
         
-        <LoginForm />
+        <Suspense fallback={<LoginFormSkeleton />}>
+          <LoginForm />
+        </Suspense>
         
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">

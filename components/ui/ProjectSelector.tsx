@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import eventBus from '@/lib/eventBus';
@@ -11,7 +11,17 @@ interface Project {
   description?: string;
 }
 
-export default function ProjectSelector() {
+// Skeleton loader for the ProjectSelector
+function ProjectSelectorSkeleton() {
+  return (
+    <div className="px-4 py-2">
+      <div className="w-full h-8 bg-gray-700 rounded animate-pulse"></div>
+    </div>
+  );
+}
+
+// Inner component that uses useSearchParams - will be wrapped in Suspense
+function ProjectSelectorInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
@@ -163,5 +173,14 @@ export default function ProjectSelector() {
         </div>
       )}
     </div>
+  );
+}
+
+// Export the wrapped component with Suspense
+export default function ProjectSelector() {
+  return (
+    <Suspense fallback={<ProjectSelectorSkeleton />}>
+      <ProjectSelectorInner />
+    </Suspense>
   );
 } 
