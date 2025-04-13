@@ -128,10 +128,10 @@ function ProjectSelectorInner() {
     setIsOpen(false);
     localStorage.setItem('selectedProjectId', project.id);
     
-    // Use window.location.href instead of router.push to force a full page reload
-    // This ensures all components re-fetch data with the new project
-    const currentPath = window.location.pathname;
-    window.location.href = `${currentPath}?project=${project.id}`;
+    // Use router.push instead of window.location.href
+    // This avoids a full page reload, potentially smoother state updates.
+    const currentPath = window.location.pathname; // Keep the base path
+    router.push(`${currentPath}?project=${project.id}`);
   };
 
   const handleCreateProject = () => {
