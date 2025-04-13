@@ -110,9 +110,18 @@ export default function Dashboard() {
         // If not in URL or localStorage, use the first one
         setSelectedProject(data[0]);
         fetchScenarios(data[0].id);
+      } else {
+        // No projects available
+        console.log('No projects available in the dashboard');
+        setSelectedProject(null);
+        setScenarios([]);
+        localStorage.removeItem('selectedProjectId');
       }
     } catch (error: any) {
+      console.error('Error fetching projects:', error);
       setError(error.message || 'Error fetching projects');
+      setSelectedProject(null);
+      setScenarios([]);
     } finally {
       setLoading(false);
     }

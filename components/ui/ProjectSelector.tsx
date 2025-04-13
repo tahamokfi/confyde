@@ -42,13 +42,14 @@ function ProjectSelectorInner() {
     
     const deletedUnsubscribe = eventBus.on('project-deleted', (projectId) => {
       console.log('ProjectSelector: Received project-deleted event', projectId);
-      fetchProjects();
       
-      // If the deleted project is the currently selected one, we need to select another one
+      // If the deleted project is the currently selected one, clear localStorage first
       if (selectedProject && selectedProject.id === projectId) {
-        // This will be handled by fetchProjects, which will select the first available project
-        // or handle the case when no projects are available
+        console.log('Currently selected project was deleted, clearing localStorage selection');
+        localStorage.removeItem('selectedProjectId');
       }
+      
+      fetchProjects();
     });
     
     // Cleanup subscriptions on unmount
@@ -104,6 +105,10 @@ function ProjectSelectorInner() {
         } else {
           localStorage.setItem('selectedProjectId', data[0].id);
         }
+      } else {
+        // No projects available, clear selection
+        setSelectedProject(null);
+        localStorage.removeItem('selectedProjectId');
       }
     } catch (error: any) {
       setError(error.message || 'Error fetching projects');

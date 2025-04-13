@@ -38,6 +38,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserId(currentSession?.user?.id ?? null);
         if (currentSession?.user?.id) {
           await fetchCompanyInfo(currentSession.user.id);
+        } else {
+          // No active session, still need to set loading to false
+          console.log('No active session found');
         }
       } catch (error) {
         console.error('Error fetching initial session:', error);
@@ -50,17 +53,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, currentSession) => {
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        setUserId(currentSession?.user?.id ?? null);
-        setCompanyId(null); // Reset company info on auth change
-        setCompanyName(null);
-        if (currentSession?.user?.id) {
-          setLoading(true); // Show loading while fetching new company info
-          await fetchCompanyInfo(currentSession.user.id);
-          setLoading(false);
-        } else {
-          setLoading(false); // No user, stop loading
+        try {
+          setSession(currentSession);
+          setUser(currentSession?.user ?? null);
+          setUserId(currentSession?.user?.id ?? null);
+          setCompanyId(null); // Reset company info on auth change
+          setCompanyName(null);
+          if (currentSession?.user?.id) {
+            setLoading(true); // Show loading while fetching new company info
+            await fetchCompanyInfo(currentSession.user.id);
+          }
+        } catch (error) {
+          console.error('Error in auth state change handler:', error);
+        } finally {
+          setLoading(false); // Always set loading to false, even if there's an error
         }
       }
     );
