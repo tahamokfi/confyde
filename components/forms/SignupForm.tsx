@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
+import { useAuth } from '@/context/AuthContext';
 
 export default function SignupForm() {
   const router = useRouter();
+  const { supabase } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [company, setCompany] = useState('Confyde Test');
@@ -25,18 +26,22 @@ export default function SignupForm() {
         .eq('name', company)
         .single();
 
-      if (companyError) {
-        throw companyError;
+      if (companyError || !companyData) {
+        throw companyError || new Error('Company not found');
       }
 
       // Sign up the user
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          // Ensure user gets redirected properly if email verification is enabled
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
 
-      if (error) {
-        throw error;
+      if (signUpError) {
+        throw signUpError;
       }
 
       if (data.user) {
@@ -52,12 +57,24 @@ export default function SignupForm() {
           ]);
 
         if (userError) {
-          throw userError;
+          // If profile creation fails, attempt to clean up the auth user
+          console.error("Error creating user profile, attempting cleanup:", userError);
+          // Note: Direct user deletion requires service_role key, 
+          // typically done from a server environment (API route or server action).
+          // For now, log the error and potentially inform the user.
+          setError('Signup succeeded but failed to create profile. Please contact support.');
+          // Optionally try to sign out the partially created user
+          // await supabase.auth.signOut(); 
+        } else {
+          // Success! Redirect to login or a confirmation page
+          router.push('/auth/login?signup=success');
         }
-
-        router.push('/auth/login?signup=success');
+      } else {
+        // Handle cases where user data is unexpectedly null after signup
+        setError('Signup completed but user data is missing. Please try again.');
       }
     } catch (error: any) {
+      console.error("Signup error:", error);
       setError(error.message || 'An error occurred during signup');
     } finally {
       setLoading(false);

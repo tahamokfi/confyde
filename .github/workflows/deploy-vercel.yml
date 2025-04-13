@@ -1,0 +1,35 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main # Or your production branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: vercel/vercel-action@v3
+        with:
+          # Required: Your Vercel API token
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          # Required: Your Vercel Organization ID
+          vercel-org-id: ${{ secrets.VERCEL_TEAM_ID }}
+          # Required: Your Vercel Project ID
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Optional: Specify the Vercel Scope (Team slug) if needed
+          # vercel-scope: your-team-slug
+          
+          # Deploy to Production Environment for the main branch
+          vercel-args: '--prod'
+        env:
+          # Pass necessary build-time environment variables from GitHub Secrets
+          # Ensure these match the names in your Vercel project settings
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Add any other build-time environment variables needed by your application
+          # e.g., NEXT_PUBLIC_HEROKU_HASH: ${{ secrets.NEXT_PUBLIC_HEROKU_HASH }} 

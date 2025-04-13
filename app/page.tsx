@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-
+// Landing page
 // Component that handles the redirect logic
 function RedirectHandler() {
   const router = useRouter();

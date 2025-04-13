@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { handleStringChange } from '@/lib/formUtils';
-import { signInWithEmail } from '@/lib/authUtils';
-import { supabase } from '@/lib/supabaseClient';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth hook
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { supabase, user: authUser, companyId: authCompanyId, companyName: authCompanyName } = useAuth(); // Use the auth context
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [company, setCompany] = useState('Confyde Test');
@@ -21,81 +22,35 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      // Use our auth utility function for sign in
-      const { user, session, error: signInError } = await signInWithEmail(email, password);
+      // Sign in using Supabase client from context
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      if (signInError || !user) {
-        setError(signInError || 'Failed to login');
+      if (signInError) {
+        setError(signInError.message || 'Failed to login');
         setLoading(false);
         return;
       }
 
-      console.log("Signed in successfully:", user.id);
-
-      // Get user's company details directly from Supabase
-      // Use select() without single() to handle missing or multiple profiles
-      const { data: usersData, error: userError } = await supabase
-        .from('users')
-        .select('company_id')
-        .eq('user_id', user.id);
-
-      if (userError) {
-        // Handle potential errors during the query itself
-        console.error("Error fetching user profile:", userError);
-        throw new Error(`Failed to fetch user profile: ${userError.message}`);
-      }
-
-      if (!usersData || usersData.length === 0) {
-        // No profile found for this authenticated user
-        console.error("No user profile found for user ID:", user.id);
-        setError('User profile not found. Please contact support or try signing up again.');
-        await supabase.auth.signOut(); // Sign out the user as their profile is incomplete
-        setLoading(false);
-        return;
-      }
-
-      if (usersData.length > 1) {
-        // Multiple profiles found - data integrity issue
-        console.error("Multiple user profiles found for user ID:", user.id);
-        setError('Inconsistent user data found. Please contact support.');
-        await supabase.auth.signOut(); // Sign out the user due to data inconsistency
-        setLoading(false);
-        return;
-      }
-
-      // Exactly one profile found, proceed
-      const userProfile = usersData[0];
-      const userCompanyId = userProfile.company_id;
-
-      // Get company name
-      const { data: companyData, error: companyError } = await supabase
-        .from('companies')
-        .select('name')
-        .eq('id', userCompanyId)
-        .single(); // Expecting exactly one company for the ID
-        
-      if (companyError) {
-        console.error("Error fetching company data:", companyError);
-        throw new Error(`Failed to fetch company data: ${companyError.message}`);
-      }
-
-      // Verify company match
-      if (companyData.name === company) {
-        router.push('/dashboard');
+      // No need to fetch profile/company info here, AuthProvider handles it
+      // Wait for AuthProvider to update state after successful login
+      // The redirect logic is now handled by middleware or AuthProvider effect
+      console.log("Login successful, waiting for redirect...");
+      
+      // Optionally, you can check for a redirect parameter from middleware
+      const redirectedFrom = searchParams.get('redirectedFrom');
+      if (redirectedFrom) {
+        router.push(redirectedFrom);
       } else {
-        setError('You do not have access to the selected company');
-        await supabase.auth.signOut();
+        router.push('/dashboard'); // Default redirect
       }
+
     } catch (error: any) {
       console.error("Login error:", error);
       setError(error.message || 'An error occurred during login');
-      
-      // Sign out if there was an error during profile/company fetch or validation
-      try {
-        await supabase.auth.signOut();
-      } catch (signOutError) {
-        console.error("Error signing out after login failure:", signOutError);
-      }
+      // No need to manually sign out on error here, as the session likely wasn't fully established
     } finally {
       setLoading(false);
     }
@@ -155,6 +110,7 @@ export default function LoginForm() {
             onChange={(e) => handleStringChange(e, setCompany)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
+            // You might want to fetch available companies dynamically later
           >
             <option value="Confyde Test">Confyde Test</option>
           </select>

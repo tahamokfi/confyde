@@ -164,6 +164,11 @@ export default function ProtocolPage() {
     setFormSuccess(false);
 
     try {
+      // Format dates properly for PostgreSQL
+      // If date is empty, set to null. Otherwise, ensure it's in YYYY-MM-DD format
+      const formattedStartDate = !startDate ? null : startDate.trim() === '' ? null : startDate;
+      const formattedEndDate = !endDate ? null : endDate.trim() === '' ? null : endDate;
+
       const { error } = await supabase
         .from('scenarios')
         .update({
@@ -175,8 +180,8 @@ export default function ProtocolPage() {
           secondary_end_point: secondaryEndPoint,
           exploratory_end_point: exploratoryEndPoint,
           status: status,
-          start_date: startDate,
-          end_date: endDate
+          start_date: formattedStartDate,
+          end_date: formattedEndDate
         })
         .eq('id', scenario.id);
 
@@ -290,14 +295,43 @@ export default function ProtocolPage() {
         result.status = data.protocolSection.statusModule.overallStatus;
       }
       
-      // Extract start date
+      // Extract start date - ensure PostgreSQL-compatible format
       if (data.protocolSection?.statusModule?.startDateStruct?.date) {
-        result.startDate = data.protocolSection.statusModule.startDateStruct.date;
+        // Try to format the date as YYYY-MM-DD
+        try {
+          const dateStr = data.protocolSection.statusModule.startDateStruct.date;
+          // If it's already in YYYY-MM-DD format, use it as is
+          if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            result.startDate = dateStr;
+          } else {
+            // Try to parse the date and format it
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+              result.startDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            }
+          }
+        } catch (err) {
+          console.error('Error parsing start date:', err);
+        }
       }
       
-      // Extract end date
+      // Extract end date - ensure PostgreSQL-compatible format
       if (data.protocolSection?.statusModule?.completionDateStruct?.date) {
-        result.endDate = data.protocolSection.statusModule.completionDateStruct.date;
+        try {
+          const dateStr = data.protocolSection.statusModule.completionDateStruct.date;
+          // If it's already in YYYY-MM-DD format, use it as is
+          if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            result.endDate = dateStr;
+          } else {
+            // Try to parse the date and format it
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+              result.endDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            }
+          }
+        } catch (err) {
+          console.error('Error parsing end date:', err);
+        }
       }
       
       // Extract arms
@@ -511,24 +545,45 @@ export default function ProtocolPage() {
                           <svg className="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-700">Status</span>
-                          <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            {status || 'Not Specified'}
-                          </span>
+                          <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
                         </div>
+                        
+                        <select
+                          id="status"
+                          value={status}
+                          onChange={(e) => setStatus(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-3"
+                        >
+                          <option value="">Select Status</option>
+                          <option value="Not yet recruiting">Not yet recruiting</option>
+                          <option value="Recruiting">Recruiting</option>
+                          <option value="Enrolling by invitation">Enrolling by invitation</option>
+                          <option value="Active, not recruiting">Active, not recruiting</option>
+                          <option value="Suspended">Suspended</option>
+                          <option value="Terminated">Terminated</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Withdrawn">Withdrawn</option>
+                          <option value="Unknown status">Unknown status</option>
+                        </select>
                         
                         <div className="grid grid-cols-2 gap-4 mt-2">
                           <div>
                             <label className="block text-xs text-gray-500 mb-1">Start Date</label>
-                            <div className="p-2 bg-gray-100 border border-gray-300 rounded-md text-sm">
-                              {startDate || 'Not Specified'}
-                            </div>
+                            <input
+                              type="date"
+                              value={startDate || ''}
+                              onChange={(e) => setStartDate(e.target.value)}
+                              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            />
                           </div>
                           <div>
                             <label className="block text-xs text-gray-500 mb-1">End Date</label>
-                            <div className="p-2 bg-gray-100 border border-gray-300 rounded-md text-sm">
-                              {endDate || 'Not Specified'}
-                            </div>
+                            <input
+                              type="date"
+                              value={endDate || ''}
+                              onChange={(e) => setEndDate(e.target.value)}
+                              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            />
                           </div>
                         </div>
                       </div>

@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext'; // Import useAuth hook
 
 export default function SetPasswordForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const supabase = createClientComponentClient();
+  const { supabase, user: authUser } = useAuth(); // Use the auth context
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,54 +14,68 @@ export default function SetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [passwordUpdateAllowed, setPasswordUpdateAllowed] = useState(false);
-  const [authStatus, setAuthStatus] = useState('checking');
+  const [authStatus, setAuthStatus] = useState('checking'); // 'checking', 'authenticated', 'no_session', 'error'
 
-  // Handle the session update when the component mounts
   useEffect(() => {
     const setupAuth = async () => {
+      setAuthStatus('checking');
       try {
-        // Let Supabase handle the auth state automatically
-        // It will process the hash fragment or recovery token
-        console.log('Setting up auth listener...');
+        console.log('SetPasswordForm: Setting up auth listener...');
         
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-          console.log('Auth state change event:', event);
+          console.log('SetPasswordForm: Auth state change event:', event);
           
-          if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-            console.log('Auth success:', event);
+          if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
+            console.log('SetPasswordForm: Auth success:', event);
             setPasswordUpdateAllowed(true);
             setAuthStatus('authenticated');
           } else if (event === 'SIGNED_OUT') {
+            console.log('SetPasswordForm: Signed out.');
             setPasswordUpdateAllowed(false);
-            setAuthStatus('signed_out');
+            setAuthStatus('no_session');
+            setError('Your session has expired. Please request a new password reset link.');
           }
         });
 
-        // Check if we already have a session
+        // Initial check
         const { data } = await supabase.auth.getSession();
         if (data.session) {
-          console.log('Existing session found');
+          console.log('SetPasswordForm: Existing session found.');
           setPasswordUpdateAllowed(true);
           setAuthStatus('authenticated');
         } else {
-          console.log('No existing session');
-          setAuthStatus('no_session');
+          // If no initial session, we might rely on the listener for PASSWORD_RECOVERY
+          console.log('SetPasswordForm: No existing session, waiting for event.');
+          // Set a timeout to prevent infinite checking state if the event never comes
+          const timer = setTimeout(() => {
+            if (authStatus === 'checking') {
+              console.log('SetPasswordForm: Timeout reached, assuming no valid session.');
+              setAuthStatus('no_session');
+              setError('Could not verify password reset link. It might be invalid or expired.');
+            }
+          }, 5000); // 5 seconds timeout
+          
+          // Cleanup timeout as well
+          return () => {
+            clearTimeout(timer);
+            console.log('SetPasswordForm: Cleaning up auth listener');
+            authListener?.subscription.unsubscribe();
+          };
         }
 
-        // Cleanup listener on unmount
         return () => {
-          console.log('Cleaning up auth listener');
+          console.log('SetPasswordForm: Cleaning up auth listener');
           authListener?.subscription.unsubscribe();
         };
       } catch (err) {
-        console.error('Error setting up auth:', err);
-        setError('There was a problem setting up authentication.');
+        console.error('SetPasswordForm: Error setting up auth:', err);
+        setError('There was a problem verifying your request.');
         setAuthStatus('error');
       }
     };
 
     setupAuth();
-  }, [supabase.auth]);
+  }, [supabase.auth, authStatus]); // Re-run if authStatus changes from checking
 
   // Check if user profile exists and create if it doesn't
   const ensureUserProfile = async (userId: string, userEmail: string) => {
@@ -139,18 +152,19 @@ export default function SetPasswordForm() {
     setLoading(true);
     
     try {
-      // Update the user's password - Supabase knows who the user is via the active session
-      const { error } = await supabase.auth.updateUser({ password });
+      // Update the user's password
+      const { error: updateError } = await supabase.auth.updateUser({ password });
       
-      if (error) {
-        throw error;
+      if (updateError) {
+        throw updateError;
       }
       
-      // Get current user details
+      // Get current user details (needed for ensureUserProfile)
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        throw new Error('Unable to get current user information');
+        // This shouldn't happen if updateUser succeeded, but check just in case
+        throw new Error('Could not retrieve user information after password update.');
       }
       
       // Ensure user has a profile in the users table
@@ -160,8 +174,8 @@ export default function SetPasswordForm() {
       );
       
       if (!success && profileError) {
-        console.warn('Failed to create user profile:', profileError);
-        // Continue anyway - password was updated successfully
+        console.warn('Password updated, but failed to ensure user profile:', profileError);
+        // Potentially display a different success message or log this more visibly
       }
       
       setSuccessMessage('Password has been updated successfully');
@@ -169,13 +183,14 @@ export default function SetPasswordForm() {
         router.push('/auth/login');
       }, 2000);
     } catch (err: any) {
+      console.error("Error updating password:", err);
       setError(err.message || 'Failed to update password');
     } finally {
       setLoading(false);
     }
   };
 
-  // Show appropriate message based on auth status
+  // UI Rendering based on authStatus
   if (authStatus === 'checking') {
     return (
       <div className="space-y-6">
@@ -187,7 +202,7 @@ export default function SetPasswordForm() {
     );
   }
 
-  if (authStatus === 'error' || authStatus === 'no_session') {
+  if (!passwordUpdateAllowed || authStatus === 'error' || authStatus === 'no_session') {
     return (
       <div className="space-y-6">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
@@ -205,6 +220,7 @@ export default function SetPasswordForm() {
     );
   }
 
+  // Render the form only if authenticated and allowed
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (

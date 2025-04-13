@@ -46,7 +46,7 @@ export default function ScenariosLayout({
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        window.location.href = '/auth/login';
+        router.push('/auth/login');
         return;
       }
       
@@ -60,7 +60,7 @@ export default function ScenariosLayout({
     };
 
     checkAuth();
-  }, [projectId, scenarioId]);
+  }, [projectId, scenarioId, router]);
   
   // Fetch project details when projectId changes
   const fetchProjectDetails = async (projectId: string) => {

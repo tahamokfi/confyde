@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const { supabase } = useAuth();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -25,8 +25,6 @@ export default function ForgotPasswordForm() {
     setLoading(true);
     
     try {
-      // Send password reset email - redirect to the root domain
-      // The main page will handle redirecting to the appropriate page
       console.log('Sending password reset email to:', email);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin,
