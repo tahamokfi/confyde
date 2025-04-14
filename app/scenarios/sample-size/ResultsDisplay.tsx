@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface StageResult {
   informationRates: number;
@@ -22,6 +23,8 @@ interface ResultsDisplayProps {
   results: CalculationResult | null;
   maxSubjects: string;
   orderedStageKeys: string[];
+  scenarioId?: string | null;
+  onSaveSuccess?: () => void;
 }
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
@@ -30,7 +33,11 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   results,
   maxSubjects,
   orderedStageKeys,
+  scenarioId,
+  onSaveSuccess
 }) => {
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Row definitions for the results table
   const resultTableRows = [
@@ -41,6 +48,38 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
     { label: 'Cum. Power', key: 'cumulativePower', digits: 4, optional: true },
     { label: 'Critical Value (HR)', key: 'criticalValuesEffectScale', digits: 4 },
   ];
+
+  // Function to save the max subjects to the protocol
+  const handleSaveToProtocol = async () => {
+    // Don't do anything if there's no scenario ID or max subjects is N/A
+    if (!scenarioId || maxSubjects === 'N/A') {
+      setSaveError('Cannot save: Missing scenario ID or valid sample size');
+      return;
+    }
+
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      // Update the sample_size in the scenario table
+      const { error } = await supabase
+        .from('scenarios')
+        .update({
+          sample_size: parseInt(maxSubjects),
+        })
+        .eq('id', scenarioId);
+
+      if (error) throw error;
+      
+      // Call the success callback
+      if (onSaveSuccess) onSaveSuccess();
+    } catch (error: any) {
+      console.error('Error saving sample size:', error);
+      setSaveError(error.message || 'Failed to save sample size');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-8">
@@ -61,7 +100,29 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
           <div className="mb-5 p-3 bg-blue-50 border border-blue-200 rounded-md text-center">
             <p className="text-base font-medium text-blue-800">
               Maximum Required Sample Size: <span className="text-lg font-bold">{maxSubjects}</span>
+              
+              {/* Save to Protocol button */}
+              {scenarioId && (
+                <button
+                  onClick={handleSaveToProtocol}
+                  disabled={saving || maxSubjects === 'N/A'}
+                  className={`ml-4 px-3 py-1 text-sm font-medium rounded-md ${
+                    saving
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500'
+                  }`}
+                >
+                  {saving ? 'Saving...' : 'Save to Protocol'}
+                </button>
+              )}
             </p>
+            
+            {/* Save error message */}
+            {saveError && (
+              <div className="mt-2 text-sm text-red-600">
+                {saveError}
+              </div>
+            )}
           </div>
 
           {/* Table */}

@@ -2,10 +2,11 @@
 
 import React, { useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
 import axios, { AxiosError } from 'axios';
+import { useSearchParams } from 'next/navigation';
 
 // Import the components
-import DesignFeaturesForm from './DesignFeaturesForm';
-import AssumptionsForm from './AssumptionsForm';
+import DesignFeaturesForm from '@/components/forms/DesignFeaturesForm';
+import AssumptionsForm from '@/components/forms/AssumptionsForm';
 import ResultsDisplay from './ResultsDisplay';
 import type { CalculationResult } from './ResultsDisplay';
 
@@ -58,11 +59,15 @@ const initialFormData: FormData = {
 };
 
 function SampleSizePage() {
+  const searchParams = useSearchParams();
+  const scenarioId = searchParams.get('id');
+  
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [results, setResults] = useState<CalculationResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
 
   // --- Input Handling (Standard fields) ---
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -158,10 +163,10 @@ function SampleSizePage() {
       return; 
     }
 
-    setLoading(true); 
-    setError(null); 
+    setLoading(true);
+    setError(null);
     setResults(null);
-
+    
     if (!secret) {
       setError("API key is missing. Please check your environment configuration.");
       setLoading(false);
@@ -221,7 +226,7 @@ function SampleSizePage() {
         setError("Received unexpected or empty result format."); 
         console.warn("Unexpected result format:", result); 
       }
-    } catch (err) { 
+    } catch (err) {
       console.error("API Call failed:", err); 
       const axiosError = err as AxiosError<any>; 
       let message = "An unexpected error occurred.";
@@ -233,7 +238,7 @@ function SampleSizePage() {
           message += typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail); 
         } else if (typeof data === 'string') { 
           message += data; 
-        } else { 
+      } else {
           message += "Could not process request."; 
         } 
       }
@@ -244,8 +249,8 @@ function SampleSizePage() {
       } 
       
       setError(message);
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   }, [formData, validateForm, secret]);
 
@@ -308,8 +313,8 @@ function SampleSizePage() {
 
           {/* Action Buttons */}
            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-8">
-             <button
-              type="submit"
+            <button 
+              type="submit" 
               className={`flex-1 py-2.5 px-4 rounded-md text-white font-medium text-base shadow-sm transition duration-150 ease-in-out ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"} ${Object.values(validationErrors).some(v => v) ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading || Object.values(validationErrors).some(v => v)}
             >
@@ -325,18 +330,29 @@ function SampleSizePage() {
           </div>
         </form>
 
-        {/* Results Display (remains the same) */}
+        {/* Results Display with scenarioId */}
         {(loading || error || results) && (
            <ResultsDisplay
-             loading={loading} error={error} results={results}
-             maxSubjects={maxSubjects} orderedStageKeys={orderedStageKeys}
+             loading={loading} 
+             error={error} 
+             results={results}
+             maxSubjects={maxSubjects} 
+             orderedStageKeys={orderedStageKeys}
+             scenarioId={scenarioId}
+             onSaveSuccess={() => setSaveSuccess(true)}
            />
+        )}
+
+        {saveSuccess && (
+          <div className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            Sample size successfully saved to protocol!
+          </div>
         )}
 
       </div>
     </div>
   );
-}
+} 
 
 export default SampleSizePage;
 
