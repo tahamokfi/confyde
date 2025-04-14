@@ -345,7 +345,7 @@ function SampleSizePage() {
 
         {saveSuccess && (
           <div className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            Sample size successfully saved to protocol!
+            Sample size saved to protocol!
           </div>
         )}
 
