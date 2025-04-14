@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { FormData } from './page'; // Assuming interfaces are in App.tsx or a types file
+import { FormData } from '@/app/scenarios/sample-size/page'; // Assuming interfaces are in App.tsx or a types file
 
 interface AssumptionsFormProps {
   formData: Pick<

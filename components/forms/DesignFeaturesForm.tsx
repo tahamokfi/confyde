@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 // Assuming interfaces are in App.tsx or a types file and are EXPORTED
-import { FormData } from './page';
+import { FormData } from '@/app/scenarios/sample-size/page';
 
 interface DesignFeaturesFormProps {
   // Use number[] for informationRates
