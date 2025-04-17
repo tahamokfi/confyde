@@ -6,6 +6,9 @@ const nextConfig = {
     // Server Actions are available by default in Next.js 14+
     // missingSuspenseWithCSRBailout: false, // Removed this temporary fix
   },
+  images: {
+    unoptimized: true,
+  },
 };
 
 module.exports = nextConfig; 

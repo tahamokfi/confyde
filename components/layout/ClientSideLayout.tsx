@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 // Fallback component for the sidebar while searchParams load
 function SidebarFallback() {
@@ -23,13 +24,24 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [projectId, setProjectId] = useState<string | null>(null);
+  const { loading, error, resetAuth } = useAuth();
+  const [isTabActive, setIsTabActive] = useState(true);
+  
+  // Handle tab visibility
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabActive(document.visibilityState === 'visible');
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   // Extract project ID from URL or localStorage
   useEffect(() => {
     const urlProjectId = searchParams.get('project');
     if (urlProjectId) {
       setProjectId(urlProjectId);
-      // Optionally update localStorage here if needed
       localStorage.setItem('selectedProjectId', urlProjectId);
     } else {
       const savedProjectId = localStorage.getItem('selectedProjectId');
@@ -45,9 +57,54 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   };
 
   const getUrl = (baseUrl: string) => {
-    // Use the projectId state which is updated by the useEffect hook
     return projectId ? `${baseUrl}?project=${projectId}` : baseUrl;
   };
+
+  // Don't show loading state if tab is not active
+  const showLoading = loading && isTabActive;
+  
+  if (showLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8 max-w-md mx-auto">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0c323d] mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Loading your dashboard...</h2>
+          <p className="text-gray-600 mb-4">This should only take a moment.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state with retry button
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8 max-w-md mx-auto">
+          <div className="text-red-500 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Authentication Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <div className="flex flex-col space-y-2">
+            <button 
+              onClick={() => isTabActive && resetAuth()} 
+              className="px-4 py-2 bg-[#0c323d] text-white rounded hover:bg-[#1c4653] transition-colors"
+            >
+              Retry
+            </button>
+            <button 
+              onClick={handleSignOut}
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 transition-colors"
+            >
+              Sign Out and Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex">

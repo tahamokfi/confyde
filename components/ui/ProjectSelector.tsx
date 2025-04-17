@@ -128,10 +128,24 @@ function ProjectSelectorInner() {
     setIsOpen(false);
     localStorage.setItem('selectedProjectId', project.id);
     
-    // Use router.push instead of window.location.href
-    // This avoids a full page reload, potentially smoother state updates.
-    const currentPath = window.location.pathname; // Keep the base path
-    router.push(`${currentPath}?project=${project.id}`);
+    // Get current URL and search params
+    const currentPath = window.location.pathname;
+    const currentSearchParams = new URLSearchParams(window.location.search);
+    
+    // Update the project ID
+    currentSearchParams.set('project', project.id);
+    
+    // Remove scenario ID if present to force a refresh of scenarios for the new project
+    // This is crucial - when changing projects we want to see scenarios for the new project
+    if (currentSearchParams.has('id')) {
+      currentSearchParams.delete('id');
+    }
+    
+    // Use router.push to navigate with the updated search params
+    router.push(`${currentPath}?${currentSearchParams.toString()}`);
+    
+    // Use router.refresh() to ensure the page rerenders with new data
+    router.refresh();
   };
 
   const handleCreateProject = () => {

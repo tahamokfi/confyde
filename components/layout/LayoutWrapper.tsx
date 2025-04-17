@@ -8,7 +8,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   
   // Paths that should not use the ClientSideLayout
-  const excludedPaths = ['/', '/auth/login', '/auth/signup'];
+  const excludedPaths = ['/', '/auth/login', '/auth/signup', '/product'];
   
   // Check if current path should exclude the layout
   const shouldExcludeLayout = excludedPaths.includes(pathname) || pathname?.startsWith('/auth/');

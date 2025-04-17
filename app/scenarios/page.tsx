@@ -10,18 +10,36 @@ export default function ScenariosPage() {
   const scenarioId = searchParams.get('id');
   const projectId = searchParams.get('project');
   const [isLoading, setIsLoading] = useState(true);
+  const [isTabActive, setIsTabActive] = useState(true);
+  
+  // Handle tab visibility
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabActive(document.visibilityState === 'visible');
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   useEffect(() => {
+    // Skip data fetching if tab is not active
+    if (!isTabActive) {
+      return;
+    }
+  
     const fetchData = async () => {
-      // If we already have a scenario ID, just redirect to protocol
-      if (scenarioId) {
-        router.push(`/scenarios/protocol?id=${scenarioId}`);
-        return;
-      }
+      setIsLoading(true);
+      
+      try {
+        // If we already have a scenario ID, just redirect to protocol
+        if (scenarioId) {
+          router.push(`/scenarios/protocol?id=${scenarioId}`);
+          return;
+        }
 
-      // If we have a project ID but no scenario ID, fetch the first scenario for this project
-      if (projectId) {
-        try {
+        // If we have a project ID but no scenario ID, fetch the first scenario for this project
+        if (projectId) {
           // Get scenarios for this project
           const { data: scenarios, error } = await supabase
             .from('scenarios')
@@ -37,13 +55,8 @@ export default function ScenariosPage() {
             // No scenarios found, redirect to create a new one
             router.push(`/scenarios/protocol?project=${projectId}`);
           }
-        } catch (error) {
-          console.error('Error fetching scenarios:', error);
-          router.push(`/scenarios/protocol?project=${projectId}`);
-        }
-      } else {
-        // No project ID, try to get the user's company and fetch any project/scenario
-        try {
+        } else {
+          // No project ID, try to get the user's company and fetch any project/scenario
           const { data: { session } } = await supabase.auth.getSession();
           if (!session) {
             router.push('/auth/login');
@@ -90,15 +103,22 @@ export default function ScenariosPage() {
             // No projects found, redirect to dashboard
             router.push('/dashboard');
           }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          router.push('/dashboard');
         }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        router.push('/dashboard');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [router, scenarioId, projectId]);
+  }, [router, scenarioId, projectId, isTabActive]);
+
+  // Don't show loading if tab is not active
+  if (!isTabActive) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-64">

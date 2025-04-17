@@ -48,6 +48,9 @@ export default function ProtocolPage() {
     protocolForm: true
   });
 
+  // Add isTabActive state
+  const [isTabActive, setIsTabActive] = useState(true);
+  
   // Toggle a section's expanded state
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
@@ -55,61 +58,129 @@ export default function ProtocolPage() {
       [section]: !prev[section]
     }));
   };
+  
+  // Handle tab visibility
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabActive(document.visibilityState === 'visible');
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      // Check authentication
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/auth/login');
+      // Skip if tab is not active
+      if (!isTabActive) {
         return;
       }
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Check authentication
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          router.push('/auth/login');
+          return;
+        }
 
-      // Get company ID
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('company_id')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (userError) {
-        setError('Error fetching user data');
-        setLoading(false);
-        return;
-      }
-
-      setCompanyId(userData.company_id);
-
-      if (scenarioId) {
-        // Fetch scenario data
-        const { data, error } = await supabase
-          .from('scenarios')
-          .select('*')
-          .eq('id', scenarioId)
+        // Get company ID
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('company_id')
+          .eq('user_id', session.user.id)
           .single();
 
-        if (error) {
-          setError('Error fetching scenario data');
-        } else {
-          setScenario(data);
-          setInclusionCriteria(data.inclusion_criteria || '');
-          setSampleSize(data.sample_size?.toString() || '0');
-          setInvestigationalArm(data.investigational_arm || '');
-          setControlArm(data.control_arm || '');
-          setPrimaryEndPoint(data.primary_end_point || '');
-          setSecondaryEndPoint(data.secondary_end_point || '');
-          setExploratoryEndPoint(data.exploratory_end_point || '');
-          setStatus(data.status || '');
-          setStartDate(data.start_date || '');
-          setEndDate(data.end_date || '');
+        if (userError) {
+          setError('Error fetching user data');
+          setLoading(false);
+          return;
         }
-      }
 
-      setLoading(false);
+        setCompanyId(userData.company_id);
+
+        // If we have a scenario ID, fetch that specific scenario
+        if (scenarioId) {
+          const { data, error } = await supabase
+            .from('scenarios')
+            .select('*')
+            .eq('id', scenarioId)
+            .single();
+
+          if (error) {
+            setError('Error fetching scenario data');
+          } else {
+            setScenario(data);
+            setInclusionCriteria(data.inclusion_criteria || '');
+            setSampleSize(data.sample_size?.toString() || '0');
+            setInvestigationalArm(data.investigational_arm || '');
+            setControlArm(data.control_arm || '');
+            setPrimaryEndPoint(data.primary_end_point || '');
+            setSecondaryEndPoint(data.secondary_end_point || '');
+            setExploratoryEndPoint(data.exploratory_end_point || '');
+            setStatus(data.status || '');
+            setStartDate(data.start_date || '');
+            setEndDate(data.end_date || '');
+          }
+        } 
+        // If we have a project ID but no scenario ID, fetch the first scenario for this project
+        else if (projectId) {
+          const { data: scenarios, error } = await supabase
+            .from('scenarios')
+            .select('*')
+            .eq('project_id', projectId)
+            .order('name', { ascending: true })
+            .limit(1);
+
+          if (error) {
+            setError('Error fetching scenarios');
+          } else if (scenarios && scenarios.length > 0) {
+            // We found a scenario, redirect to it
+            router.push(`/scenarios/protocol?id=${scenarios[0].id}&project=${projectId}`);
+            return;
+          }
+          // Otherwise, we'll just show the creation form (handled by the rendering logic)
+        }
+      } catch (error: any) {
+        console.error('Error in fetchData:', error);
+        setError(error.message || 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, [scenarioId, projectId, router]);
+  }, [scenarioId, projectId, router, isTabActive]);
+  
+  // Add a special effect to handle project changes without scenarioId
+  useEffect(() => {
+    // If we have a project ID but no scenario ID, and we're not already loading
+    if (projectId && !scenarioId && !loading) {
+      // Deliberately re-fetch data to get the first scenario of the new project
+      const fetchScenarioForProject = async () => {
+        try {
+          const { data: scenarios, error } = await supabase
+            .from('scenarios')
+            .select('id')
+            .eq('project_id', projectId)
+            .order('name', { ascending: true })
+            .limit(1);
+
+          if (!error && scenarios && scenarios.length > 0) {
+            // Redirect to the first scenario for this project
+            router.push(`/scenarios/protocol?id=${scenarios[0].id}&project=${projectId}`);
+          }
+        } catch (error) {
+          console.error('Error fetching scenario for project:', error);
+        }
+      };
+      
+      fetchScenarioForProject();
+    }
+  }, [projectId, scenarioId, loading, router]);
 
   // Update form fields when imported data changes
   useEffect(() => {

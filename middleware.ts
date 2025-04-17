@@ -62,6 +62,7 @@ export async function middleware(request: NextRequest) {
     '/auth/signup',
     '/auth/forgot-password',
     '/auth/set-password',
+    '/product',
   ]
 
   // Check if the current path is public
@@ -90,9 +91,10 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
+     * - images (static image assets in public/images)
      * - favicon.ico (favicon file)
-     * - files with extensions (e.g., .png, .jpg)
+     * - files with extensions (e.g., .png, .jpg) - this might be redundant with the specific exclusions
      */
-    '/((?!api|_next/static|_next/image|favicon\.ico|.*\.\w+).*)', 
+    '/((?!api|_next/static|_next/image|images|favicon\.ico|.*\.\w+).*)|/', // Match root path separately
   ],
 } 

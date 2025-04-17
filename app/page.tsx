@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabaseClient';
 // Landing page
 // Component that handles the redirect logic
@@ -100,6 +101,12 @@ export default function Home() {
               <span className="text-2xl font-bold text-[#0c323d]">Confyde AI</span>
             </div>
             <div className="flex space-x-4">
+              <Link 
+                href="/product"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-[#0c323d] hover:text-blue-800"
+              >
+                Product
+              </Link>
               <Link 
                 href="/auth/login"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-[#0c323d] hover:text-blue-800"
@@ -231,6 +238,74 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Enrollment Screenshot Section */}
+        <div className="py-16 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-extrabold text-gray-900">Powerful Enrollment Projections</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Visualize and predict your clinical trial enrollment with precision
+              </p>
+            </div>
+            
+            <div className="rounded-2xl overflow-hidden shadow-xl">
+              <div className="bg-white p-2 md:p-4">
+                <div className="relative max-w-3xl mx-auto">
+                  <Link href="/product" className="block">
+                    <div className="relative w-full h-[400px]">
+                      <img 
+                        src="/images/product/scshot_1.png" 
+                        alt="Enrollment Projections Dashboard"
+                        width="1200"
+                        height="675"
+                        className="rounded-lg w-full h-full object-contain"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0c323d]/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center">
+                        <div className="bg-white rounded-full px-6 py-2 text-[#0c323d] font-medium mb-8 shadow-lg">
+                          View Product Details
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                <div className="flex items-center mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <h3 className="text-sm font-medium text-gray-900">Visualize Enrollment Progress</h3>
+                </div>
+                <p className="text-sm text-gray-600">Interactive charts show cumulative screening and enrollment projections in real-time</p>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                <div className="flex items-center mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m-6 4h6m-6 4h6m4 0v6a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v6m-2 0H7" />
+                  </svg>
+                  <h3 className="text-sm font-medium text-gray-900">Customizable Parameters</h3>
+                </div>
+                <p className="text-sm text-gray-600">Adjust site counts, screening rates, and other variables to create accurate enrollment models</p>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                <div className="flex items-center mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <h3 className="text-sm font-medium text-gray-900">Timeline Predictions</h3>
+                </div>
+                <p className="text-sm text-gray-600">Automatically calculate last subject dosed date and total enrollment duration</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+
         {/* CTA section */}
         <div className="bg-white">
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
@@ -249,10 +324,10 @@ export default function Home() {
               </div>
               <div className="ml-3 inline-flex rounded-md shadow">
                 <Link
-                  href="/auth/login"
+                  href="/product"
                   className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-[#0c323d] bg-white hover:bg-gray-50"
                 >
-                  Log in
+                  Learn more
                 </Link>
               </div>
             </div>

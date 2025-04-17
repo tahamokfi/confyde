@@ -183,6 +183,7 @@ function ScenariosLayoutInner({ children }: { children: React.ReactNode }) {
   const isProtocolActive = pathname.includes('/protocol');
   const isSchemaActive = pathname.includes('/schema');
   const isSampleSizeActive = pathname.includes('/sample-size');
+  const isEnrollmentActive = pathname.includes('/enrollment');
 
   // Update selected scenario when scenario ID changes
   useEffect(() => {
@@ -274,6 +275,12 @@ function ScenariosLayoutInner({ children }: { children: React.ReactNode }) {
               className={getTabClassName(isSampleSizeActive)}
             >
               Sample Size
+            </Link>
+            <Link
+              href={`/scenarios/enrollment?${scenarioId ? `id=${scenarioId}` : `project=${selectedProject?.id}`}`}
+              className={getTabClassName(isEnrollmentActive)}
+            >
+              Enrollment
             </Link>
           </nav>
         </div>
