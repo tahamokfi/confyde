@@ -253,12 +253,14 @@ export default function Home() {
                 <div className="relative max-w-3xl mx-auto">
                   <Link href="/product" className="block">
                     <div className="relative w-full h-[400px]">
-                      <img 
+                      <Image 
                         src="/images/product/scshot_1.png" 
                         alt="Enrollment Projections Dashboard"
-                        width="1200"
-                        height="675"
-                        className="rounded-lg w-full h-full object-contain"
+                        width={1200}
+                        height={675}
+                        priority
+                        className="rounded-lg"
+                        style={{ objectFit: 'contain' }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0c323d]/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center">
                         <div className="bg-white rounded-full px-6 py-2 text-[#0c323d] font-medium mb-8 shadow-lg">
